@@ -1,0 +1,36 @@
+{
+    "name": "aylien/newsapi",
+    "version": "0.0.1",
+    "description": "AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.",
+    "keywords": [
+        "aylien",
+        "news api",
+        "news",
+        "php",
+        "sdk",
+        "api"
+    ],
+    "homepage": "https://github.com/AYLIEN/aylien_newsapi_php",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Hamed Ramezanian Nik",
+            "homepage": "http://hamedrnik.com/",
+            "email": "hamed.r.nik@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "satooshi/php-coveralls": "~1.0",
+        "squizlabs/php_codesniffer": "~2.6"
+    },
+    "autoload": {
+        "psr-4": { "Aylien\\NewsApi\\" : "lib/" }
+    }
+}
