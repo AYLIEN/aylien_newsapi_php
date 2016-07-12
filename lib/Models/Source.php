@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Source Class Doc Comment
  *
@@ -45,13 +46,13 @@ class Source implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Source';
+    protected static $apiModelName = 'Source';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'id' => 'int',
         'name' => 'string',
         'domain' => 'string',
@@ -59,16 +60,17 @@ class Source implements ArrayAccess
         'locations' => '\Aylien\NewsApi\Models\Location[]',
         'scopes' => '\Aylien\NewsApi\Models\Scope[]'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'id' => 'id',
         'name' => 'name',
         'domain' => 'domain',
@@ -76,16 +78,17 @@ class Source implements ArrayAccess
         'locations' => 'locations',
         'scopes' => 'scopes'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'id' => 'setId',
         'name' => 'setName',
         'domain' => 'setDomain',
@@ -93,16 +96,17 @@ class Source implements ArrayAccess
         'locations' => 'setLocations',
         'scopes' => 'setScopes'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'id' => 'getId',
         'name' => 'getName',
         'domain' => 'getDomain',
@@ -110,41 +114,17 @@ class Source implements ArrayAccess
         'locations' => 'getLocations',
         'scopes' => 'getScopes'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $id The source id which is a unique value
-      * @var int
-      */
-    protected $id;
-    /**
-      * $name The source name
-      * @var string
-      */
-    protected $name;
-    /**
-      * $domain Domain name of the source which is extracted from the source URL
-      * @var string
-      */
-    protected $domain;
-    /**
-      * $logo_url A URL which points to the source logo
-      * @var string
-      */
-    protected $logo_url;
-    /**
-      * $locations The source locations which are tend to be the physical locations of the source, e.g. BBC headquarter is located in London.
-      * @var \Aylien\NewsApi\Models\Location[]
-      */
-    protected $locations;
-    /**
-      * $scopes The source scopes which is tend to be scope locations of the source, e.g. BBC scopes is international. 
-      * @var \Aylien\NewsApi\Models\Scope[]
-      */
-    protected $scopes;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -152,26 +132,46 @@ class Source implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->id = $data["id"];
-            $this->name = $data["name"];
-            $this->domain = $data["domain"];
-            $this->logo_url = $data["logo_url"];
-            $this->locations = $data["locations"];
-            $this->scopes = $data["scopes"];
-        }
+        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
+        $this->container['domain'] = isset($data['domain']) ? $data['domain'] : null;
+        $this->container['logo_url'] = isset($data['logo_url']) ? $data['logo_url'] : null;
+        $this->container['locations'] = isset($data['locations']) ? $data['locations'] : null;
+        $this->container['scopes'] = isset($data['scopes']) ? $data['scopes'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets id
      * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return $this->container['id'];
     }
-  
+
     /**
      * Sets id
      * @param int $id The source id which is a unique value
@@ -179,19 +179,20 @@ class Source implements ArrayAccess
      */
     public function setId($id)
     {
-        
-        $this->id = $id;
+        $this->container['id'] = $id;
+
         return $this;
     }
+
     /**
      * Gets name
      * @return string
      */
     public function getName()
     {
-        return $this->name;
+        return $this->container['name'];
     }
-  
+
     /**
      * Sets name
      * @param string $name The source name
@@ -199,19 +200,20 @@ class Source implements ArrayAccess
      */
     public function setName($name)
     {
-        
-        $this->name = $name;
+        $this->container['name'] = $name;
+
         return $this;
     }
+
     /**
      * Gets domain
      * @return string
      */
     public function getDomain()
     {
-        return $this->domain;
+        return $this->container['domain'];
     }
-  
+
     /**
      * Sets domain
      * @param string $domain Domain name of the source which is extracted from the source URL
@@ -219,19 +221,20 @@ class Source implements ArrayAccess
      */
     public function setDomain($domain)
     {
-        
-        $this->domain = $domain;
+        $this->container['domain'] = $domain;
+
         return $this;
     }
+
     /**
      * Gets logo_url
      * @return string
      */
     public function getLogoUrl()
     {
-        return $this->logo_url;
+        return $this->container['logo_url'];
     }
-  
+
     /**
      * Sets logo_url
      * @param string $logo_url A URL which points to the source logo
@@ -239,19 +242,20 @@ class Source implements ArrayAccess
      */
     public function setLogoUrl($logo_url)
     {
-        
-        $this->logo_url = $logo_url;
+        $this->container['logo_url'] = $logo_url;
+
         return $this;
     }
+
     /**
      * Gets locations
      * @return \Aylien\NewsApi\Models\Location[]
      */
     public function getLocations()
     {
-        return $this->locations;
+        return $this->container['locations'];
     }
-  
+
     /**
      * Sets locations
      * @param \Aylien\NewsApi\Models\Location[] $locations The source locations which are tend to be the physical locations of the source, e.g. BBC headquarter is located in London.
@@ -259,71 +263,76 @@ class Source implements ArrayAccess
      */
     public function setLocations($locations)
     {
-        
-        $this->locations = $locations;
+        $this->container['locations'] = $locations;
+
         return $this;
     }
+
     /**
      * Gets scopes
      * @return \Aylien\NewsApi\Models\Scope[]
      */
     public function getScopes()
     {
-        return $this->scopes;
+        return $this->container['scopes'];
     }
-  
+
     /**
      * Sets scopes
-     * @param \Aylien\NewsApi\Models\Scope[] $scopes The source scopes which is tend to be scope locations of the source, e.g. BBC scopes is international. 
+     * @param \Aylien\NewsApi\Models\Scope[] $scopes The source scopes which is tend to be scope locations of the source, e.g. BBC scopes is international.
      * @return $this
      */
     public function setScopes($scopes)
     {
-        
-        $this->scopes = $scopes;
+        $this->container['scopes'] = $scopes;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

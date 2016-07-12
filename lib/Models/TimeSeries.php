@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * TimeSeries Class Doc Comment
  *
@@ -45,70 +46,69 @@ class TimeSeries implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'TimeSeries';
+    protected static $apiModelName = 'TimeSeries';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'published_at' => '\DateTime',
         'count' => 'int'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'published_at' => 'published_at',
         'count' => 'count'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'published_at' => 'setPublishedAt',
         'count' => 'setCount'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'published_at' => 'getPublishedAt',
         'count' => 'getCount'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $published_at The published date of the time series bin
-      * @var \DateTime
-      */
-    protected $published_at;
-    /**
-      * $count The count of time series bin
-      * @var int
-      */
-    protected $count;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -116,22 +116,42 @@ class TimeSeries implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->published_at = $data["published_at"];
-            $this->count = $data["count"];
-        }
+        $this->container['published_at'] = isset($data['published_at']) ? $data['published_at'] : null;
+        $this->container['count'] = isset($data['count']) ? $data['count'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets published_at
      * @return \DateTime
      */
     public function getPublishedAt()
     {
-        return $this->published_at;
+        return $this->container['published_at'];
     }
-  
+
     /**
      * Sets published_at
      * @param \DateTime $published_at The published date of the time series bin
@@ -139,19 +159,20 @@ class TimeSeries implements ArrayAccess
      */
     public function setPublishedAt($published_at)
     {
-        
-        $this->published_at = $published_at;
+        $this->container['published_at'] = $published_at;
+
         return $this;
     }
+
     /**
      * Gets count
      * @return int
      */
     public function getCount()
     {
-        return $this->count;
+        return $this->container['count'];
     }
-  
+
     /**
      * Sets count
      * @param int $count The count of time series bin
@@ -159,51 +180,55 @@ class TimeSeries implements ArrayAccess
      */
     public function setCount($count)
     {
-        
-        $this->count = $count;
+        $this->container['count'] = $count;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

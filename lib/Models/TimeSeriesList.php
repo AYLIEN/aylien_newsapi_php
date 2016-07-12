@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * TimeSeriesList Class Doc Comment
  *
@@ -45,88 +46,77 @@ class TimeSeriesList implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'TimeSeriesList';
+    protected static $apiModelName = 'TimeSeriesList';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'time_series' => '\Aylien\NewsApi\Models\TimeSeries[]',
         'period' => 'string',
         'published_at_start' => '\DateTime',
         'published_at_end' => '\DateTime'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'time_series' => 'time_series',
         'period' => 'period',
         'published_at_start' => 'published_at.start',
         'published_at_end' => 'published_at.end'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'time_series' => 'setTimeSeries',
         'period' => 'setPeriod',
         'published_at_start' => 'setPublishedAtStart',
         'published_at_end' => 'setPublishedAtEnd'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'time_series' => 'getTimeSeries',
         'period' => 'getPeriod',
         'published_at_start' => 'getPublishedAtStart',
         'published_at_end' => 'getPublishedAtEnd'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $time_series An array of time series
-      * @var \Aylien\NewsApi\Models\TimeSeries[]
-      */
-    protected $time_series;
-    /**
-      * $period The size of each date range expressed as an interval to be added to the lower bound.
-      * @var string
-      */
-    protected $period;
-    /**
-      * $published_at_start The start published date of the time series
-      * @var \DateTime
-      */
-    protected $published_at_start;
-    /**
-      * $published_at_end The end published date of the time series
-      * @var \DateTime
-      */
-    protected $published_at_end;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -134,24 +124,44 @@ class TimeSeriesList implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->time_series = $data["time_series"];
-            $this->period = $data["period"];
-            $this->published_at_start = $data["published_at_start"];
-            $this->published_at_end = $data["published_at_end"];
-        }
+        $this->container['time_series'] = isset($data['time_series']) ? $data['time_series'] : null;
+        $this->container['period'] = isset($data['period']) ? $data['period'] : null;
+        $this->container['published_at_start'] = isset($data['published_at_start']) ? $data['published_at_start'] : null;
+        $this->container['published_at_end'] = isset($data['published_at_end']) ? $data['published_at_end'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets time_series
      * @return \Aylien\NewsApi\Models\TimeSeries[]
      */
     public function getTimeSeries()
     {
-        return $this->time_series;
+        return $this->container['time_series'];
     }
-  
+
     /**
      * Sets time_series
      * @param \Aylien\NewsApi\Models\TimeSeries[] $time_series An array of time series
@@ -159,19 +169,20 @@ class TimeSeriesList implements ArrayAccess
      */
     public function setTimeSeries($time_series)
     {
-        
-        $this->time_series = $time_series;
+        $this->container['time_series'] = $time_series;
+
         return $this;
     }
+
     /**
      * Gets period
      * @return string
      */
     public function getPeriod()
     {
-        return $this->period;
+        return $this->container['period'];
     }
-  
+
     /**
      * Sets period
      * @param string $period The size of each date range expressed as an interval to be added to the lower bound.
@@ -179,19 +190,20 @@ class TimeSeriesList implements ArrayAccess
      */
     public function setPeriod($period)
     {
-        
-        $this->period = $period;
+        $this->container['period'] = $period;
+
         return $this;
     }
+
     /**
      * Gets published_at_start
      * @return \DateTime
      */
     public function getPublishedAtStart()
     {
-        return $this->published_at_start;
+        return $this->container['published_at_start'];
     }
-  
+
     /**
      * Sets published_at_start
      * @param \DateTime $published_at_start The start published date of the time series
@@ -199,19 +211,20 @@ class TimeSeriesList implements ArrayAccess
      */
     public function setPublishedAtStart($published_at_start)
     {
-        
-        $this->published_at_start = $published_at_start;
+        $this->container['published_at_start'] = $published_at_start;
+
         return $this;
     }
+
     /**
      * Gets published_at_end
      * @return \DateTime
      */
     public function getPublishedAtEnd()
     {
-        return $this->published_at_end;
+        return $this->container['published_at_end'];
     }
-  
+
     /**
      * Sets published_at_end
      * @param \DateTime $published_at_end The end published date of the time series
@@ -219,51 +232,55 @@ class TimeSeriesList implements ArrayAccess
      */
     public function setPublishedAtEnd($published_at_end)
     {
-        
-        $this->published_at_end = $published_at_end;
+        $this->container['published_at_end'] = $published_at_end;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

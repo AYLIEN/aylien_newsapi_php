@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Location Class Doc Comment
  *
@@ -45,79 +46,73 @@ class Location implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Location';
+    protected static $apiModelName = 'Location';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'country' => 'string',
         'state' => 'string',
         'city' => 'string'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'country' => 'country',
         'state' => 'state',
         'city' => 'city'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'country' => 'setCountry',
         'state' => 'setState',
         'city' => 'setCity'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'country' => 'getCountry',
         'state' => 'getState',
         'city' => 'getCity'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $country The country code of the location. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
-      * @var string
-      */
-    protected $country;
-    /**
-      * $state The state of the location
-      * @var string
-      */
-    protected $state;
-    /**
-      * $city The city of the location
-      * @var string
-      */
-    protected $city;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -125,23 +120,43 @@ class Location implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->country = $data["country"];
-            $this->state = $data["state"];
-            $this->city = $data["city"];
-        }
+        $this->container['country'] = isset($data['country']) ? $data['country'] : null;
+        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
+        $this->container['city'] = isset($data['city']) ? $data['city'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets country
      * @return string
      */
     public function getCountry()
     {
-        return $this->country;
+        return $this->container['country'];
     }
-  
+
     /**
      * Sets country
      * @param string $country The country code of the location. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
@@ -149,19 +164,20 @@ class Location implements ArrayAccess
      */
     public function setCountry($country)
     {
-        
-        $this->country = $country;
+        $this->container['country'] = $country;
+
         return $this;
     }
+
     /**
      * Gets state
      * @return string
      */
     public function getState()
     {
-        return $this->state;
+        return $this->container['state'];
     }
-  
+
     /**
      * Sets state
      * @param string $state The state of the location
@@ -169,19 +185,20 @@ class Location implements ArrayAccess
      */
     public function setState($state)
     {
-        
-        $this->state = $state;
+        $this->container['state'] = $state;
+
         return $this;
     }
+
     /**
      * Gets city
      * @return string
      */
     public function getCity()
     {
-        return $this->city;
+        return $this->container['city'];
     }
-  
+
     /**
      * Sets city
      * @param string $city The city of the location
@@ -189,51 +206,55 @@ class Location implements ArrayAccess
      */
     public function setCity($city)
     {
-        
-        $this->city = $city;
+        $this->container['city'] = $city;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

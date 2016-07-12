@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * ShareCounts Class Doc Comment
  *
@@ -45,88 +46,77 @@ class ShareCounts implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'ShareCounts';
+    protected static $apiModelName = 'ShareCounts';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'facebook' => '\Aylien\NewsApi\Models\ShareCount[]',
         'google_plus' => '\Aylien\NewsApi\Models\ShareCount[]',
         'linkedin' => '\Aylien\NewsApi\Models\ShareCount[]',
         'reddit' => '\Aylien\NewsApi\Models\ShareCount[]'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'facebook' => 'facebook',
         'google_plus' => 'google_plus',
         'linkedin' => 'linkedin',
         'reddit' => 'reddit'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'facebook' => 'setFacebook',
         'google_plus' => 'setGooglePlus',
         'linkedin' => 'setLinkedin',
         'reddit' => 'setReddit'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'facebook' => 'getFacebook',
         'google_plus' => 'getGooglePlus',
         'linkedin' => 'getLinkedin',
         'reddit' => 'getReddit'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $facebook Facebook shares count
-      * @var \Aylien\NewsApi\Models\ShareCount[]
-      */
-    protected $facebook;
-    /**
-      * $google_plus Google Plus shares count
-      * @var \Aylien\NewsApi\Models\ShareCount[]
-      */
-    protected $google_plus;
-    /**
-      * $linkedin LinkedIn shares count
-      * @var \Aylien\NewsApi\Models\ShareCount[]
-      */
-    protected $linkedin;
-    /**
-      * $reddit Reddit shares count
-      * @var \Aylien\NewsApi\Models\ShareCount[]
-      */
-    protected $reddit;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -134,24 +124,44 @@ class ShareCounts implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->facebook = $data["facebook"];
-            $this->google_plus = $data["google_plus"];
-            $this->linkedin = $data["linkedin"];
-            $this->reddit = $data["reddit"];
-        }
+        $this->container['facebook'] = isset($data['facebook']) ? $data['facebook'] : null;
+        $this->container['google_plus'] = isset($data['google_plus']) ? $data['google_plus'] : null;
+        $this->container['linkedin'] = isset($data['linkedin']) ? $data['linkedin'] : null;
+        $this->container['reddit'] = isset($data['reddit']) ? $data['reddit'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets facebook
      * @return \Aylien\NewsApi\Models\ShareCount[]
      */
     public function getFacebook()
     {
-        return $this->facebook;
+        return $this->container['facebook'];
     }
-  
+
     /**
      * Sets facebook
      * @param \Aylien\NewsApi\Models\ShareCount[] $facebook Facebook shares count
@@ -159,19 +169,20 @@ class ShareCounts implements ArrayAccess
      */
     public function setFacebook($facebook)
     {
-        
-        $this->facebook = $facebook;
+        $this->container['facebook'] = $facebook;
+
         return $this;
     }
+
     /**
      * Gets google_plus
      * @return \Aylien\NewsApi\Models\ShareCount[]
      */
     public function getGooglePlus()
     {
-        return $this->google_plus;
+        return $this->container['google_plus'];
     }
-  
+
     /**
      * Sets google_plus
      * @param \Aylien\NewsApi\Models\ShareCount[] $google_plus Google Plus shares count
@@ -179,19 +190,20 @@ class ShareCounts implements ArrayAccess
      */
     public function setGooglePlus($google_plus)
     {
-        
-        $this->google_plus = $google_plus;
+        $this->container['google_plus'] = $google_plus;
+
         return $this;
     }
+
     /**
      * Gets linkedin
      * @return \Aylien\NewsApi\Models\ShareCount[]
      */
     public function getLinkedin()
     {
-        return $this->linkedin;
+        return $this->container['linkedin'];
     }
-  
+
     /**
      * Sets linkedin
      * @param \Aylien\NewsApi\Models\ShareCount[] $linkedin LinkedIn shares count
@@ -199,19 +211,20 @@ class ShareCounts implements ArrayAccess
      */
     public function setLinkedin($linkedin)
     {
-        
-        $this->linkedin = $linkedin;
+        $this->container['linkedin'] = $linkedin;
+
         return $this;
     }
+
     /**
      * Gets reddit
      * @return \Aylien\NewsApi\Models\ShareCount[]
      */
     public function getReddit()
     {
-        return $this->reddit;
+        return $this->container['reddit'];
     }
-  
+
     /**
      * Sets reddit
      * @param \Aylien\NewsApi\Models\ShareCount[] $reddit Reddit shares count
@@ -219,51 +232,55 @@ class ShareCounts implements ArrayAccess
      */
     public function setReddit($reddit)
     {
-        
-        $this->reddit = $reddit;
+        $this->container['reddit'] = $reddit;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

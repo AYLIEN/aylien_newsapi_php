@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Story Class Doc Comment
  *
@@ -45,13 +46,13 @@ class Story implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Story';
+    protected static $apiModelName = 'Story';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'id' => 'int',
         'title' => 'string',
         'body' => 'string',
@@ -73,16 +74,17 @@ class Story implements ArrayAccess
         'published_at' => '\DateTime',
         'links' => '\Aylien\NewsApi\Models\StoryLinks'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'id' => 'id',
         'title' => 'title',
         'body' => 'body',
@@ -104,16 +106,17 @@ class Story implements ArrayAccess
         'published_at' => 'published_at',
         'links' => 'links'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'id' => 'setId',
         'title' => 'setTitle',
         'body' => 'setBody',
@@ -135,16 +138,17 @@ class Story implements ArrayAccess
         'published_at' => 'setPublishedAt',
         'links' => 'setLinks'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'id' => 'getId',
         'title' => 'getTitle',
         'body' => 'getBody',
@@ -166,111 +170,17 @@ class Story implements ArrayAccess
         'published_at' => 'getPublishedAt',
         'links' => 'getLinks'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $id ID of the story which is unique identification
-      * @var int
-      */
-    protected $id;
-    /**
-      * $title Title of the story
-      * @var string
-      */
-    protected $title;
-    /**
-      * $body Body of the story
-      * @var string
-      */
-    protected $body;
-    /**
-      * $summary The suggested story summary
-      * @var \Aylien\NewsApi\Models\Summary
-      */
-    protected $summary;
-    /**
-      * $source The story source
-      * @var \Aylien\NewsApi\Models\Source
-      */
-    protected $source;
-    /**
-      * $author The story author
-      * @var \Aylien\NewsApi\Models\Author
-      */
-    protected $author;
-    /**
-      * $entities Extracted entities from the story title or body
-      * @var \Aylien\NewsApi\Models\Entities
-      */
-    protected $entities;
-    /**
-      * $keywords Extracted keywords mentioned in the story title or body
-      * @var string[]
-      */
-    protected $keywords;
-    /**
-      * $hashtags An array of suggested Story hashtags
-      * @var string[]
-      */
-    protected $hashtags;
-    /**
-      * $characters_count Characters count of the story body
-      * @var int
-      */
-    protected $characters_count;
-    /**
-      * $words_count Words count of the story body
-      * @var int
-      */
-    protected $words_count;
-    /**
-      * $sentences_count Sentences count of the story body
-      * @var int
-      */
-    protected $sentences_count;
-    /**
-      * $paragraphs_count Paragraphs count of the story body
-      * @var int
-      */
-    protected $paragraphs_count;
-    /**
-      * $categories Suggested categories for the story
-      * @var \Aylien\NewsApi\Models\Category[]
-      */
-    protected $categories;
-    /**
-      * $social_shares_count Social shares count for the story
-      * @var \Aylien\NewsApi\Models\ShareCounts
-      */
-    protected $social_shares_count;
-    /**
-      * $media An array of extracted media such as images and videos
-      * @var \Aylien\NewsApi\Models\Media[]
-      */
-    protected $media;
-    /**
-      * $sentiment Suggested sentiments for the story title or body
-      * @var \Aylien\NewsApi\Models\Sentiments
-      */
-    protected $sentiment;
-    /**
-      * $language Language of the story
-      * @var string
-      */
-    protected $language;
-    /**
-      * $published_at Published date of the story
-      * @var \DateTime
-      */
-    protected $published_at;
-    /**
-      * $links Links which is related to the story
-      * @var \Aylien\NewsApi\Models\StoryLinks
-      */
-    protected $links;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -278,60 +188,81 @@ class Story implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->id = $data["id"];
-            $this->title = $data["title"];
-            $this->body = $data["body"];
-            $this->summary = $data["summary"];
-            $this->source = $data["source"];
-            $this->author = $data["author"];
-            $this->entities = $data["entities"];
-            $this->keywords = $data["keywords"];
-            $this->hashtags = $data["hashtags"];
-            $this->characters_count = $data["characters_count"];
-            $this->words_count = $data["words_count"];
-            $this->sentences_count = $data["sentences_count"];
-            $this->paragraphs_count = $data["paragraphs_count"];
-            $this->categories = $data["categories"];
-            $this->social_shares_count = $data["social_shares_count"];
-            $this->media = $data["media"];
-            $this->sentiment = $data["sentiment"];
-            $this->language = $data["language"];
-            $this->published_at = $data["published_at"];
-            $this->links = $data["links"];
-        }
+        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['title'] = isset($data['title']) ? $data['title'] : null;
+        $this->container['body'] = isset($data['body']) ? $data['body'] : null;
+        $this->container['summary'] = isset($data['summary']) ? $data['summary'] : null;
+        $this->container['source'] = isset($data['source']) ? $data['source'] : null;
+        $this->container['author'] = isset($data['author']) ? $data['author'] : null;
+        $this->container['entities'] = isset($data['entities']) ? $data['entities'] : null;
+        $this->container['keywords'] = isset($data['keywords']) ? $data['keywords'] : null;
+        $this->container['hashtags'] = isset($data['hashtags']) ? $data['hashtags'] : null;
+        $this->container['characters_count'] = isset($data['characters_count']) ? $data['characters_count'] : null;
+        $this->container['words_count'] = isset($data['words_count']) ? $data['words_count'] : null;
+        $this->container['sentences_count'] = isset($data['sentences_count']) ? $data['sentences_count'] : null;
+        $this->container['paragraphs_count'] = isset($data['paragraphs_count']) ? $data['paragraphs_count'] : null;
+        $this->container['categories'] = isset($data['categories']) ? $data['categories'] : null;
+        $this->container['social_shares_count'] = isset($data['social_shares_count']) ? $data['social_shares_count'] : null;
+        $this->container['media'] = isset($data['media']) ? $data['media'] : null;
+        $this->container['sentiment'] = isset($data['sentiment']) ? $data['sentiment'] : null;
+        $this->container['language'] = isset($data['language']) ? $data['language'] : null;
+        $this->container['published_at'] = isset($data['published_at']) ? $data['published_at'] : null;
+        $this->container['links'] = isset($data['links']) ? $data['links'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets id
      * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return $this->container['id'];
     }
-  
+
     /**
      * Sets id
-     * @param int $id ID of the story which is unique identification
+     * @param int $id ID of the story which is a unique identification
      * @return $this
      */
     public function setId($id)
     {
-        
-        $this->id = $id;
+        $this->container['id'] = $id;
+
         return $this;
     }
+
     /**
      * Gets title
      * @return string
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->container['title'];
     }
-  
+
     /**
      * Sets title
      * @param string $title Title of the story
@@ -339,19 +270,20 @@ class Story implements ArrayAccess
      */
     public function setTitle($title)
     {
-        
-        $this->title = $title;
+        $this->container['title'] = $title;
+
         return $this;
     }
+
     /**
      * Gets body
      * @return string
      */
     public function getBody()
     {
-        return $this->body;
+        return $this->container['body'];
     }
-  
+
     /**
      * Sets body
      * @param string $body Body of the story
@@ -359,19 +291,20 @@ class Story implements ArrayAccess
      */
     public function setBody($body)
     {
-        
-        $this->body = $body;
+        $this->container['body'] = $body;
+
         return $this;
     }
+
     /**
      * Gets summary
      * @return \Aylien\NewsApi\Models\Summary
      */
     public function getSummary()
     {
-        return $this->summary;
+        return $this->container['summary'];
     }
-  
+
     /**
      * Sets summary
      * @param \Aylien\NewsApi\Models\Summary $summary The suggested story summary
@@ -379,19 +312,20 @@ class Story implements ArrayAccess
      */
     public function setSummary($summary)
     {
-        
-        $this->summary = $summary;
+        $this->container['summary'] = $summary;
+
         return $this;
     }
+
     /**
      * Gets source
      * @return \Aylien\NewsApi\Models\Source
      */
     public function getSource()
     {
-        return $this->source;
+        return $this->container['source'];
     }
-  
+
     /**
      * Sets source
      * @param \Aylien\NewsApi\Models\Source $source The story source
@@ -399,19 +333,20 @@ class Story implements ArrayAccess
      */
     public function setSource($source)
     {
-        
-        $this->source = $source;
+        $this->container['source'] = $source;
+
         return $this;
     }
+
     /**
      * Gets author
      * @return \Aylien\NewsApi\Models\Author
      */
     public function getAuthor()
     {
-        return $this->author;
+        return $this->container['author'];
     }
-  
+
     /**
      * Sets author
      * @param \Aylien\NewsApi\Models\Author $author The story author
@@ -419,19 +354,20 @@ class Story implements ArrayAccess
      */
     public function setAuthor($author)
     {
-        
-        $this->author = $author;
+        $this->container['author'] = $author;
+
         return $this;
     }
+
     /**
      * Gets entities
      * @return \Aylien\NewsApi\Models\Entities
      */
     public function getEntities()
     {
-        return $this->entities;
+        return $this->container['entities'];
     }
-  
+
     /**
      * Sets entities
      * @param \Aylien\NewsApi\Models\Entities $entities Extracted entities from the story title or body
@@ -439,19 +375,20 @@ class Story implements ArrayAccess
      */
     public function setEntities($entities)
     {
-        
-        $this->entities = $entities;
+        $this->container['entities'] = $entities;
+
         return $this;
     }
+
     /**
      * Gets keywords
      * @return string[]
      */
     public function getKeywords()
     {
-        return $this->keywords;
+        return $this->container['keywords'];
     }
-  
+
     /**
      * Sets keywords
      * @param string[] $keywords Extracted keywords mentioned in the story title or body
@@ -459,19 +396,20 @@ class Story implements ArrayAccess
      */
     public function setKeywords($keywords)
     {
-        
-        $this->keywords = $keywords;
+        $this->container['keywords'] = $keywords;
+
         return $this;
     }
+
     /**
      * Gets hashtags
      * @return string[]
      */
     public function getHashtags()
     {
-        return $this->hashtags;
+        return $this->container['hashtags'];
     }
-  
+
     /**
      * Sets hashtags
      * @param string[] $hashtags An array of suggested Story hashtags
@@ -479,99 +417,104 @@ class Story implements ArrayAccess
      */
     public function setHashtags($hashtags)
     {
-        
-        $this->hashtags = $hashtags;
+        $this->container['hashtags'] = $hashtags;
+
         return $this;
     }
+
     /**
      * Gets characters_count
      * @return int
      */
     public function getCharactersCount()
     {
-        return $this->characters_count;
+        return $this->container['characters_count'];
     }
-  
+
     /**
      * Sets characters_count
-     * @param int $characters_count Characters count of the story body
+     * @param int $characters_count Character count of the story body
      * @return $this
      */
     public function setCharactersCount($characters_count)
     {
-        
-        $this->characters_count = $characters_count;
+        $this->container['characters_count'] = $characters_count;
+
         return $this;
     }
+
     /**
      * Gets words_count
      * @return int
      */
     public function getWordsCount()
     {
-        return $this->words_count;
+        return $this->container['words_count'];
     }
-  
+
     /**
      * Sets words_count
-     * @param int $words_count Words count of the story body
+     * @param int $words_count Word count of the story body
      * @return $this
      */
     public function setWordsCount($words_count)
     {
-        
-        $this->words_count = $words_count;
+        $this->container['words_count'] = $words_count;
+
         return $this;
     }
+
     /**
      * Gets sentences_count
      * @return int
      */
     public function getSentencesCount()
     {
-        return $this->sentences_count;
+        return $this->container['sentences_count'];
     }
-  
+
     /**
      * Sets sentences_count
-     * @param int $sentences_count Sentences count of the story body
+     * @param int $sentences_count Sentence count of the story body
      * @return $this
      */
     public function setSentencesCount($sentences_count)
     {
-        
-        $this->sentences_count = $sentences_count;
+        $this->container['sentences_count'] = $sentences_count;
+
         return $this;
     }
+
     /**
      * Gets paragraphs_count
      * @return int
      */
     public function getParagraphsCount()
     {
-        return $this->paragraphs_count;
+        return $this->container['paragraphs_count'];
     }
-  
+
     /**
      * Sets paragraphs_count
-     * @param int $paragraphs_count Paragraphs count of the story body
+     * @param int $paragraphs_count Paragraph count of the story body
      * @return $this
      */
     public function setParagraphsCount($paragraphs_count)
     {
-        
-        $this->paragraphs_count = $paragraphs_count;
+        $this->container['paragraphs_count'] = $paragraphs_count;
+
         return $this;
     }
+
     /**
      * Gets categories
      * @return \Aylien\NewsApi\Models\Category[]
      */
     public function getCategories()
     {
-        return $this->categories;
+        return $this->container['categories'];
     }
-  
+
     /**
      * Sets categories
      * @param \Aylien\NewsApi\Models\Category[] $categories Suggested categories for the story
@@ -579,19 +522,20 @@ class Story implements ArrayAccess
      */
     public function setCategories($categories)
     {
-        
-        $this->categories = $categories;
+        $this->container['categories'] = $categories;
+
         return $this;
     }
+
     /**
      * Gets social_shares_count
      * @return \Aylien\NewsApi\Models\ShareCounts
      */
     public function getSocialSharesCount()
     {
-        return $this->social_shares_count;
+        return $this->container['social_shares_count'];
     }
-  
+
     /**
      * Sets social_shares_count
      * @param \Aylien\NewsApi\Models\ShareCounts $social_shares_count Social shares count for the story
@@ -599,19 +543,20 @@ class Story implements ArrayAccess
      */
     public function setSocialSharesCount($social_shares_count)
     {
-        
-        $this->social_shares_count = $social_shares_count;
+        $this->container['social_shares_count'] = $social_shares_count;
+
         return $this;
     }
+
     /**
      * Gets media
      * @return \Aylien\NewsApi\Models\Media[]
      */
     public function getMedia()
     {
-        return $this->media;
+        return $this->container['media'];
     }
-  
+
     /**
      * Sets media
      * @param \Aylien\NewsApi\Models\Media[] $media An array of extracted media such as images and videos
@@ -619,19 +564,20 @@ class Story implements ArrayAccess
      */
     public function setMedia($media)
     {
-        
-        $this->media = $media;
+        $this->container['media'] = $media;
+
         return $this;
     }
+
     /**
      * Gets sentiment
      * @return \Aylien\NewsApi\Models\Sentiments
      */
     public function getSentiment()
     {
-        return $this->sentiment;
+        return $this->container['sentiment'];
     }
-  
+
     /**
      * Sets sentiment
      * @param \Aylien\NewsApi\Models\Sentiments $sentiment Suggested sentiments for the story title or body
@@ -639,19 +585,20 @@ class Story implements ArrayAccess
      */
     public function setSentiment($sentiment)
     {
-        
-        $this->sentiment = $sentiment;
+        $this->container['sentiment'] = $sentiment;
+
         return $this;
     }
+
     /**
      * Gets language
      * @return string
      */
     public function getLanguage()
     {
-        return $this->language;
+        return $this->container['language'];
     }
-  
+
     /**
      * Sets language
      * @param string $language Language of the story
@@ -659,19 +606,20 @@ class Story implements ArrayAccess
      */
     public function setLanguage($language)
     {
-        
-        $this->language = $language;
+        $this->container['language'] = $language;
+
         return $this;
     }
+
     /**
      * Gets published_at
      * @return \DateTime
      */
     public function getPublishedAt()
     {
-        return $this->published_at;
+        return $this->container['published_at'];
     }
-  
+
     /**
      * Sets published_at
      * @param \DateTime $published_at Published date of the story
@@ -679,19 +627,20 @@ class Story implements ArrayAccess
      */
     public function setPublishedAt($published_at)
     {
-        
-        $this->published_at = $published_at;
+        $this->container['published_at'] = $published_at;
+
         return $this;
     }
+
     /**
      * Gets links
      * @return \Aylien\NewsApi\Models\StoryLinks
      */
     public function getLinks()
     {
-        return $this->links;
+        return $this->container['links'];
     }
-  
+
     /**
      * Sets links
      * @param \Aylien\NewsApi\Models\StoryLinks $links Links which is related to the story
@@ -699,51 +648,55 @@ class Story implements ArrayAccess
      */
     public function setLinks($links)
     {
-        
-        $this->links = $links;
+        $this->container['links'] = $links;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

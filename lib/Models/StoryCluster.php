@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * StoryCluster Class Doc Comment
  *
@@ -45,97 +46,81 @@ class StoryCluster implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'StoryCluster';
+    protected static $apiModelName = 'StoryCluster';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'id' => 'int',
         'phrases' => 'string[]',
         'size' => 'int',
         'stories' => 'int[]',
         'score' => 'double'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'id' => 'id',
         'phrases' => 'phrases',
         'size' => 'size',
         'stories' => 'stories',
         'score' => 'score'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'id' => 'setId',
         'phrases' => 'setPhrases',
         'size' => 'setSize',
         'stories' => 'setStories',
         'score' => 'setScore'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'id' => 'getId',
         'phrases' => 'getPhrases',
         'size' => 'getSize',
         'stories' => 'getStories',
         'score' => 'getScore'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $id A unique identification for the cluster
-      * @var int
-      */
-    protected $id;
-    /**
-      * $phrases Suggested labels for the cluster
-      * @var string[]
-      */
-    protected $phrases;
-    /**
-      * $size Size of the cluster
-      * @var int
-      */
-    protected $size;
-    /**
-      * $stories Story ids which are in the cluster
-      * @var int[]
-      */
-    protected $stories;
-    /**
-      * $score The cluster score
-      * @var double
-      */
-    protected $score;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -143,25 +128,45 @@ class StoryCluster implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->id = $data["id"];
-            $this->phrases = $data["phrases"];
-            $this->size = $data["size"];
-            $this->stories = $data["stories"];
-            $this->score = $data["score"];
-        }
+        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['phrases'] = isset($data['phrases']) ? $data['phrases'] : null;
+        $this->container['size'] = isset($data['size']) ? $data['size'] : null;
+        $this->container['stories'] = isset($data['stories']) ? $data['stories'] : null;
+        $this->container['score'] = isset($data['score']) ? $data['score'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets id
      * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return $this->container['id'];
     }
-  
+
     /**
      * Sets id
      * @param int $id A unique identification for the cluster
@@ -169,19 +174,20 @@ class StoryCluster implements ArrayAccess
      */
     public function setId($id)
     {
-        
-        $this->id = $id;
+        $this->container['id'] = $id;
+
         return $this;
     }
+
     /**
      * Gets phrases
      * @return string[]
      */
     public function getPhrases()
     {
-        return $this->phrases;
+        return $this->container['phrases'];
     }
-  
+
     /**
      * Sets phrases
      * @param string[] $phrases Suggested labels for the cluster
@@ -189,19 +195,20 @@ class StoryCluster implements ArrayAccess
      */
     public function setPhrases($phrases)
     {
-        
-        $this->phrases = $phrases;
+        $this->container['phrases'] = $phrases;
+
         return $this;
     }
+
     /**
      * Gets size
      * @return int
      */
     public function getSize()
     {
-        return $this->size;
+        return $this->container['size'];
     }
-  
+
     /**
      * Sets size
      * @param int $size Size of the cluster
@@ -209,19 +216,20 @@ class StoryCluster implements ArrayAccess
      */
     public function setSize($size)
     {
-        
-        $this->size = $size;
+        $this->container['size'] = $size;
+
         return $this;
     }
+
     /**
      * Gets stories
      * @return int[]
      */
     public function getStories()
     {
-        return $this->stories;
+        return $this->container['stories'];
     }
-  
+
     /**
      * Sets stories
      * @param int[] $stories Story ids which are in the cluster
@@ -229,19 +237,20 @@ class StoryCluster implements ArrayAccess
      */
     public function setStories($stories)
     {
-        
-        $this->stories = $stories;
+        $this->container['stories'] = $stories;
+
         return $this;
     }
+
     /**
      * Gets score
      * @return double
      */
     public function getScore()
     {
-        return $this->score;
+        return $this->container['score'];
     }
-  
+
     /**
      * Sets score
      * @param double $score The cluster score
@@ -249,51 +258,55 @@ class StoryCluster implements ArrayAccess
      */
     public function setScore($score)
     {
-        
-        $this->score = $score;
+        $this->container['score'] = $score;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

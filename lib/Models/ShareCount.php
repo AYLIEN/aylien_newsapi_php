@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * ShareCount Class Doc Comment
  *
@@ -45,70 +46,69 @@ class ShareCount implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'ShareCount';
+    protected static $apiModelName = 'ShareCount';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'count' => 'int',
         'fetched_at' => '\DateTime'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'count' => 'count',
         'fetched_at' => 'fetched_at'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'count' => 'setCount',
         'fetched_at' => 'setFetchedAt'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'count' => 'getCount',
         'fetched_at' => 'getFetchedAt'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $count The number of shares
-      * @var int
-      */
-    protected $count;
-    /**
-      * $fetched_at The fetched date of the shares
-      * @var \DateTime
-      */
-    protected $fetched_at;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -116,22 +116,42 @@ class ShareCount implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->count = $data["count"];
-            $this->fetched_at = $data["fetched_at"];
-        }
+        $this->container['count'] = isset($data['count']) ? $data['count'] : null;
+        $this->container['fetched_at'] = isset($data['fetched_at']) ? $data['fetched_at'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets count
      * @return int
      */
     public function getCount()
     {
-        return $this->count;
+        return $this->container['count'];
     }
-  
+
     /**
      * Sets count
      * @param int $count The number of shares
@@ -139,19 +159,20 @@ class ShareCount implements ArrayAccess
      */
     public function setCount($count)
     {
-        
-        $this->count = $count;
+        $this->container['count'] = $count;
+
         return $this;
     }
+
     /**
      * Gets fetched_at
      * @return \DateTime
      */
     public function getFetchedAt()
     {
-        return $this->fetched_at;
+        return $this->container['fetched_at'];
     }
-  
+
     /**
      * Sets fetched_at
      * @param \DateTime $fetched_at The fetched date of the shares
@@ -159,51 +180,55 @@ class ShareCount implements ArrayAccess
      */
     public function setFetchedAt($fetched_at)
     {
-        
-        $this->fetched_at = $fetched_at;
+        $this->container['fetched_at'] = $fetched_at;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

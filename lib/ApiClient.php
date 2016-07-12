@@ -50,21 +50,24 @@ class ApiClient
 
     /**
      * Configuration
+     *
      * @var Configuration
      */
     protected $config;
 
     /**
      * Object Serializer
+     *
      * @var ObjectSerializer
      */
     protected $serializer;
 
     /**
      * Constructor of the class
+     *
      * @param Configuration $config config for this ApiClient
      */
-    public function __construct(Configuration $config = null)
+    public function __construct(\Aylien\NewsApi\Configuration $config = null)
     {
         if ($config == null) {
             $config = Configuration::getDefaultConfiguration();
@@ -76,6 +79,7 @@ class ApiClient
 
     /**
      * Get the config
+     *
      * @return Configuration
      */
     public function getConfig()
@@ -85,6 +89,7 @@ class ApiClient
 
     /**
      * Get the serializer
+     *
      * @return ObjectSerializer
      */
     public function getSerializer()
@@ -94,7 +99,9 @@ class ApiClient
 
     /**
      * Get API key (with prefix if set)
+     *
      * @param  string $apiKeyIdentifier name of apikey
+     *
      * @return string API key with the prefix
      */
     public function getApiKeyWithPrefix($apiKeyIdentifier)
@@ -114,34 +121,24 @@ class ApiClient
 
         return $keyWithPrefix;
     }
-    
-    
-    public function cr_post($a,$b=0,$c=0){
-        if (!is_array($a)) return false;
-        foreach ((array)$a as $k=>$v){
-            if ($c) $k=$b; elseif (is_int($k)) $k=$b.$k;
-            if (is_array($v)||is_object($v)) {
-                $r[]=cr_post($v,$k,1);continue;
-            }
-            $r[]=urlencode($k)."=" .urlencode($v);    
-        }
-        return implode("&",$r);
-    }
 
     /**
      * Make the HTTP call (Sync)
+     *
      * @param string $resourcePath path to method endpoint
      * @param string $method       method to call
      * @param array  $queryParams  parameters to be place in query URL
      * @param array  $postData     parameters to be placed in POST body
      * @param array  $headerParams parameters to be place in request header
      * @param string $responseType expected response type of the endpoint
+     * @param string $endpointPath path to method endpoint before expanding parameters
+     *
      * @throws \Aylien\NewsApi\ApiException on a non 2xx response
      * @return mixed
      */
-    public function callApi($resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null)
+    public function callApi($resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null)
     {
-    
+
         $headers = array();
 
         // construct the http header
@@ -168,7 +165,7 @@ class ApiClient
         if ($this->config->getCurlTimeout() != 0) {
             curl_setopt($curl, CURLOPT_TIMEOUT, $this->config->getCurlTimeout());
         }
-        // return the result on success, rather than just true 
+        // return the result on success, rather than just true
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -179,7 +176,7 @@ class ApiClient
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         }
 
-        if (! empty($queryParams)) {
+        if (!empty($queryParams)) {
             $url = ($url . '?' . preg_replace("/%5B[0-9]+%5D=/i", "=", http_build_query($queryParams)));
         }
 
@@ -210,7 +207,7 @@ class ApiClient
 
         // debugging for curl
         if ($this->config->getDebug()) {
-            error_log("[DEBUG] HTTP Request body  ~BEGIN~\n".print_r($postData, true)."\n~END~\n", 3, $this->config->getDebugFile());
+            error_log("[DEBUG] HTTP Request body  ~BEGIN~".PHP_EOL.print_r($postData, true).PHP_EOL."~END~".PHP_EOL, 3, $this->config->getDebugFile());
 
             curl_setopt($curl, CURLOPT_VERBOSE, 1);
             curl_setopt($curl, CURLOPT_STDERR, fopen($this->config->getDebugFile(), 'a'));
@@ -230,13 +227,25 @@ class ApiClient
 
         // debug HTTP response body
         if ($this->config->getDebug()) {
-            error_log("[DEBUG] HTTP Response body ~BEGIN~\n".print_r($http_body, true)."\n~END~\n", 3, $this->config->getDebugFile());
+            error_log("[DEBUG] HTTP Response body ~BEGIN~".PHP_EOL.print_r($http_body, true).PHP_EOL."~END~".PHP_EOL, 3, $this->config->getDebugFile());
         }
 
         // Handle the response
         if ($response_info['http_code'] == 0) {
-            throw new ApiException("API call to $url timed out: ".serialize($response_info), 0, null, null);
-        } elseif ($response_info['http_code'] >= 200 && $response_info['http_code'] <= 299 ) {
+            $curl_error_message = curl_error($curl);
+
+            // curl_exec can sometimes fail but still return a blank message from curl_error().
+            if (!empty($curl_error_message)) {
+                $error_message = "API call to $url failed: $curl_error_message";
+            } else {
+                $error_message = "API call to $url failed, but for an unknown reason. " .
+                    "This could happen if you are disconnected from the network.";
+            }
+
+            $exception = new ApiException($error_message, 0, null, null);
+            $exception->setResponseObject($response_info);
+            throw $exception;
+        } elseif ($response_info['http_code'] >= 200 && $response_info['http_code'] <= 299) {
             // return raw body if response is a file
             if ($responseType == '\SplFileObject' || $responseType == 'string') {
                 return array($http_body, $response_info['http_code'], $http_header);
@@ -254,7 +263,9 @@ class ApiClient
 
             throw new ApiException(
                 "[".$response_info['http_code']."] Error connecting to the API ($url)",
-                $response_info['http_code'], $http_header, $data
+                $response_info['http_code'],
+                $http_header,
+                $data
             );
         }
         return array($data, $response_info['http_code'], $http_header);
@@ -308,35 +319,30 @@ class ApiClient
         // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
         $headers = array();
         $key = '';
-   
-        foreach(explode("\n", $raw_headers) as $h)
-        {
+
+        foreach (explode("\n", $raw_headers) as $h) {
             $h = explode(':', $h, 2);
-   
-            if (isset($h[1]))
-            {
-                if (!isset($headers[$h[0]]))
+
+            if (isset($h[1])) {
+                if (!isset($headers[$h[0]])) {
                     $headers[$h[0]] = trim($h[1]);
-                elseif (is_array($headers[$h[0]]))
-                {
+                } elseif (is_array($headers[$h[0]])) {
                     $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
-                }
-                else
-                {
+                } else {
                     $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
                 }
-   
+
                 $key = $h[0];
-            }
-            else
-            {
-                if (substr($h[0], 0, 1) == "\t") 
-                    $headers[$key] .= "\r\n\t".trim($h[0]); 
-                elseif (!$key)
-                    $headers[0] = trim($h[0]);trim($h[0]);
+            } else {
+                if (substr($h[0], 0, 1) == "\t") {
+                    $headers[$key] .= "\r\n\t".trim($h[0]);
+                } elseif (!$key) {
+                    $headers[0] = trim($h[0]);
+                }
+                trim($h[0]);
             }
         }
-   
+
         return $headers;
     }
 }

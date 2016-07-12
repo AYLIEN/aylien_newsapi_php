@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Scope Class Doc Comment
  *
@@ -45,88 +46,97 @@ class Scope implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Scope';
+    protected static $apiModelName = 'Scope';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'country' => 'string',
         'state' => 'string',
         'city' => 'string',
         'level' => 'string'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'country' => 'country',
         'state' => 'state',
         'city' => 'city',
         'level' => 'level'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'country' => 'setCountry',
         'state' => 'setState',
         'city' => 'setCity',
         'level' => 'setLevel'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'country' => 'getCountry',
         'state' => 'getState',
         'city' => 'getCity',
         'level' => 'getLevel'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
+    const LEVEL_INTERNATIONAL = 'international';
+    const LEVEL_NATIONAL = 'national';
+    const LEVEL_LOCAL = 'local';
+    
+
+    
     /**
-      * $country The country code of the scope. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
-      * @var string
-      */
-    protected $country;
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public function getLevelAllowableValues()
+    {
+        return [
+            self::LEVEL_INTERNATIONAL,
+            self::LEVEL_NATIONAL,
+            self::LEVEL_LOCAL,
+        ];
+    }
+    
+
     /**
-      * $state The state of the scope
-      * @var string
-      */
-    protected $state;
-    /**
-      * $city The city of the scope
-      * @var string
-      */
-    protected $city;
-    /**
-      * $level The level of the scope
-      * @var string
-      */
-    protected $level;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -134,139 +144,175 @@ class Scope implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->country = $data["country"];
-            $this->state = $data["state"];
-            $this->city = $data["city"];
-            $this->level = $data["level"];
-        }
+        $this->container['country'] = isset($data['country']) ? $data['country'] : null;
+        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
+        $this->container['city'] = isset($data['city']) ? $data['city'] : null;
+        $this->container['level'] = isset($data['level']) ? $data['level'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        $allowed_values = array("international", "national", "local");
+        if (!in_array($this->container['level'], $allowed_values)) {
+            $invalid_properties[] = "invalid value for 'level', must be one of #{allowed_values}.";
+        }
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        $allowed_values = array("international", "national", "local");
+        if (!in_array($this->container['level'], $allowed_values)) {
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * Gets country
      * @return string
      */
     public function getCountry()
     {
-        return $this->country;
+        return $this->container['country'];
     }
-  
+
     /**
      * Sets country
-     * @param string $country The country code of the scope. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
+     * @param string $country The source scope by country code. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
      * @return $this
      */
     public function setCountry($country)
     {
-        
-        $this->country = $country;
+        $this->container['country'] = $country;
+
         return $this;
     }
+
     /**
      * Gets state
      * @return string
      */
     public function getState()
     {
-        return $this->state;
+        return $this->container['state'];
     }
-  
+
     /**
      * Sets state
-     * @param string $state The state of the scope
+     * @param string $state The scope by state
      * @return $this
      */
     public function setState($state)
     {
-        
-        $this->state = $state;
+        $this->container['state'] = $state;
+
         return $this;
     }
+
     /**
      * Gets city
      * @return string
      */
     public function getCity()
     {
-        return $this->city;
+        return $this->container['city'];
     }
-  
+
     /**
      * Sets city
-     * @param string $city The city of the scope
+     * @param string $city The scope by city
      * @return $this
      */
     public function setCity($city)
     {
-        
-        $this->city = $city;
+        $this->container['city'] = $city;
+
         return $this;
     }
+
     /**
      * Gets level
      * @return string
      */
     public function getLevel()
     {
-        return $this->level;
+        return $this->container['level'];
     }
-  
+
     /**
      * Sets level
-     * @param string $level The level of the scope
+     * @param string $level The scope by level
      * @return $this
      */
     public function setLevel($level)
     {
-        $allowed_values = array("international", "national", "local");
+        $allowed_values = array('international', 'national', 'local');
         if (!in_array($level, $allowed_values)) {
             throw new \InvalidArgumentException("Invalid value for 'level', must be one of 'international', 'national', 'local'");
         }
-        $this->level = $level;
+        $this->container['level'] = $level;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

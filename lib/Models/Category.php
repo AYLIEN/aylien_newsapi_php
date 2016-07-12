@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Category Class Doc Comment
  *
@@ -45,13 +46,13 @@ class Category implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Category';
+    protected static $apiModelName = 'Category';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'id' => 'string',
         'taxonomy' => 'string',
         'level' => 'int',
@@ -59,16 +60,17 @@ class Category implements ArrayAccess
         'confident' => 'bool',
         'links' => '\Aylien\NewsApi\Models\CategoryLinks'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'id' => 'id',
         'taxonomy' => 'taxonomy',
         'level' => 'level',
@@ -76,16 +78,17 @@ class Category implements ArrayAccess
         'confident' => 'confident',
         'links' => 'links'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'id' => 'setId',
         'taxonomy' => 'setTaxonomy',
         'level' => 'setLevel',
@@ -93,16 +96,17 @@ class Category implements ArrayAccess
         'confident' => 'setConfident',
         'links' => 'setLinks'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'id' => 'getId',
         'taxonomy' => 'getTaxonomy',
         'level' => 'getLevel',
@@ -110,41 +114,33 @@ class Category implements ArrayAccess
         'confident' => 'getConfident',
         'links' => 'getLinks'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
+    const TAXONOMY_IAB_QAG = 'iab-qag';
+    const TAXONOMY_IPTC_SUBJECTCODE = 'iptc-subjectcode';
+    
     /**
-      * $id The ID of the category
-      * @var string
-      */
-    protected $id;
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public function getTaxonomyAllowableValues()
+    {
+        return [
+            self::TAXONOMY_IAB_QAG,
+            self::TAXONOMY_IPTC_SUBJECTCODE,
+        ];
+    }
+    
+
     /**
-      * $taxonomy The taxonomy of the category
-      * @var string
-      */
-    protected $taxonomy;
-    /**
-      * $level The level of the category
-      * @var int
-      */
-    protected $level;
-    /**
-      * $score The score of the category
-      * @var double
-      */
-    protected $score;
-    /**
-      * $confident It defines whether the extracted category is confident or not
-      * @var bool
-      */
-    protected $confident;
-    /**
-      * $links Related links for the category
-      * @var \Aylien\NewsApi\Models\CategoryLinks
-      */
-    protected $links;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -152,26 +148,54 @@ class Category implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->id = $data["id"];
-            $this->taxonomy = $data["taxonomy"];
-            $this->level = $data["level"];
-            $this->score = $data["score"];
-            $this->confident = $data["confident"];
-            $this->links = $data["links"];
-        }
+        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['taxonomy'] = isset($data['taxonomy']) ? $data['taxonomy'] : null;
+        $this->container['level'] = isset($data['level']) ? $data['level'] : null;
+        $this->container['score'] = isset($data['score']) ? $data['score'] : null;
+        $this->container['confident'] = isset($data['confident']) ? $data['confident'] : null;
+        $this->container['links'] = isset($data['links']) ? $data['links'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        $allowed_values = array("iab-qag", "iptc-subjectcode");
+        if (!in_array($this->container['taxonomy'], $allowed_values)) {
+            $invalid_properties[] = "invalid value for 'taxonomy', must be one of #{allowed_values}.";
+        }
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        $allowed_values = array("iab-qag", "iptc-subjectcode");
+        if (!in_array($this->container['taxonomy'], $allowed_values)) {
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * Gets id
      * @return string
      */
     public function getId()
     {
-        return $this->id;
+        return $this->container['id'];
     }
-  
+
     /**
      * Sets id
      * @param string $id The ID of the category
@@ -179,19 +203,20 @@ class Category implements ArrayAccess
      */
     public function setId($id)
     {
-        
-        $this->id = $id;
+        $this->container['id'] = $id;
+
         return $this;
     }
+
     /**
      * Gets taxonomy
      * @return string
      */
     public function getTaxonomy()
     {
-        return $this->taxonomy;
+        return $this->container['taxonomy'];
     }
-  
+
     /**
      * Sets taxonomy
      * @param string $taxonomy The taxonomy of the category
@@ -199,22 +224,24 @@ class Category implements ArrayAccess
      */
     public function setTaxonomy($taxonomy)
     {
-        $allowed_values = array("iab-qag", "iptc-subjectcode");
+        $allowed_values = array('iab-qag', 'iptc-subjectcode');
         if (!in_array($taxonomy, $allowed_values)) {
             throw new \InvalidArgumentException("Invalid value for 'taxonomy', must be one of 'iab-qag', 'iptc-subjectcode'");
         }
-        $this->taxonomy = $taxonomy;
+        $this->container['taxonomy'] = $taxonomy;
+
         return $this;
     }
+
     /**
      * Gets level
      * @return int
      */
     public function getLevel()
     {
-        return $this->level;
+        return $this->container['level'];
     }
-  
+
     /**
      * Sets level
      * @param int $level The level of the category
@@ -222,19 +249,20 @@ class Category implements ArrayAccess
      */
     public function setLevel($level)
     {
-        
-        $this->level = $level;
+        $this->container['level'] = $level;
+
         return $this;
     }
+
     /**
      * Gets score
      * @return double
      */
     public function getScore()
     {
-        return $this->score;
+        return $this->container['score'];
     }
-  
+
     /**
      * Sets score
      * @param double $score The score of the category
@@ -242,19 +270,20 @@ class Category implements ArrayAccess
      */
     public function setScore($score)
     {
-        
-        $this->score = $score;
+        $this->container['score'] = $score;
+
         return $this;
     }
+
     /**
      * Gets confident
      * @return bool
      */
     public function getConfident()
     {
-        return $this->confident;
+        return $this->container['confident'];
     }
-  
+
     /**
      * Sets confident
      * @param bool $confident It defines whether the extracted category is confident or not
@@ -262,19 +291,20 @@ class Category implements ArrayAccess
      */
     public function setConfident($confident)
     {
-        
-        $this->confident = $confident;
+        $this->container['confident'] = $confident;
+
         return $this;
     }
+
     /**
      * Gets links
      * @return \Aylien\NewsApi\Models\CategoryLinks
      */
     public function getLinks()
     {
-        return $this->links;
+        return $this->container['links'];
     }
-  
+
     /**
      * Sets links
      * @param \Aylien\NewsApi\Models\CategoryLinks $links Related links for the category
@@ -282,51 +312,55 @@ class Category implements ArrayAccess
      */
     public function setLinks($links)
     {
-        
-        $this->links = $links;
+        $this->container['links'] = $links;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

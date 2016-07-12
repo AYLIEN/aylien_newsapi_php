@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Entities Class Doc Comment
  *
@@ -45,70 +46,69 @@ class Entities implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Entities';
+    protected static $apiModelName = 'Entities';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'title' => '\Aylien\NewsApi\Models\Entity[]',
         'body' => '\Aylien\NewsApi\Models\Entity[]'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'title' => 'title',
         'body' => 'body'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'title' => 'setTitle',
         'body' => 'setBody'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'title' => 'getTitle',
         'body' => 'getBody'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $title An array of extracted entities from the story title
-      * @var \Aylien\NewsApi\Models\Entity[]
-      */
-    protected $title;
-    /**
-      * $body An array of extracted entities from the story body
-      * @var \Aylien\NewsApi\Models\Entity[]
-      */
-    protected $body;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -116,22 +116,42 @@ class Entities implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->title = $data["title"];
-            $this->body = $data["body"];
-        }
+        $this->container['title'] = isset($data['title']) ? $data['title'] : null;
+        $this->container['body'] = isset($data['body']) ? $data['body'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets title
      * @return \Aylien\NewsApi\Models\Entity[]
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->container['title'];
     }
-  
+
     /**
      * Sets title
      * @param \Aylien\NewsApi\Models\Entity[] $title An array of extracted entities from the story title
@@ -139,19 +159,20 @@ class Entities implements ArrayAccess
      */
     public function setTitle($title)
     {
-        
-        $this->title = $title;
+        $this->container['title'] = $title;
+
         return $this;
     }
+
     /**
      * Gets body
      * @return \Aylien\NewsApi\Models\Entity[]
      */
     public function getBody()
     {
-        return $this->body;
+        return $this->container['body'];
     }
-  
+
     /**
      * Sets body
      * @param \Aylien\NewsApi\Models\Entity[] $body An array of extracted entities from the story body
@@ -159,51 +180,55 @@ class Entities implements ArrayAccess
      */
     public function setBody($body)
     {
-        
-        $this->body = $body;
+        $this->container['body'] = $body;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Trends Class Doc Comment
  *
@@ -45,70 +46,69 @@ class Trends implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Trends';
+    protected static $apiModelName = 'Trends';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'trends' => '\Aylien\NewsApi\Models\Trend[]',
         'field' => 'string'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'trends' => 'trends',
         'field' => 'field'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'trends' => 'setTrends',
         'field' => 'setField'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'trends' => 'getTrends',
         'field' => 'getField'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $trends An array of trends
-      * @var \Aylien\NewsApi\Models\Trend[]
-      */
-    protected $trends;
-    /**
-      * $field The field of trends
-      * @var string
-      */
-    protected $field;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -116,22 +116,42 @@ class Trends implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->trends = $data["trends"];
-            $this->field = $data["field"];
-        }
+        $this->container['trends'] = isset($data['trends']) ? $data['trends'] : null;
+        $this->container['field'] = isset($data['field']) ? $data['field'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets trends
      * @return \Aylien\NewsApi\Models\Trend[]
      */
     public function getTrends()
     {
-        return $this->trends;
+        return $this->container['trends'];
     }
-  
+
     /**
      * Sets trends
      * @param \Aylien\NewsApi\Models\Trend[] $trends An array of trends
@@ -139,19 +159,20 @@ class Trends implements ArrayAccess
      */
     public function setTrends($trends)
     {
-        
-        $this->trends = $trends;
+        $this->container['trends'] = $trends;
+
         return $this;
     }
+
     /**
      * Gets field
      * @return string
      */
     public function getField()
     {
-        return $this->field;
+        return $this->container['field'];
     }
-  
+
     /**
      * Sets field
      * @param string $field The field of trends
@@ -159,51 +180,55 @@ class Trends implements ArrayAccess
      */
     public function setField($field)
     {
-        
-        $this->field = $field;
+        $this->container['field'] = $field;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

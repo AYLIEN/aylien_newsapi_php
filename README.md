@@ -16,7 +16,7 @@ To install the bindings via [Composer](http://getcomposer.org/), add the followi
 ```
 {
   "require": {
-    "aylien/newsapi": "~0.0.1"
+    "aylien/newsapi": "~0.1.0"
   }
 }
 ```
@@ -31,13 +31,13 @@ Download the files and include `autoload.php`:
     require_once('/path/to/aylien_news_api/autoload.php');
 ```
 
-## Tests 
+## Tests
 
 To run the unit tests:
 
 ```
 composer install
-./vendor/bin/phpunit lib/Tests
+./vendor/bin/phpunit ./test
 ```
 
 ## Getting Started
@@ -84,53 +84,52 @@ All URIs are relative to *https://api.newsapi.aylien.com/api/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**listAutocompletes**](docs/DefaultApi.md#listautocompletes) | **GET** /autocompletes | List autocompletes
-*DefaultApi* | [**listCoverages**](docs/DefaultApi.md#listcoverages) | **POST** /coverages | List coverages
-*DefaultApi* | [**listHistograms**](docs/DefaultApi.md#listhistograms) | **GET** /histograms | List histograms
-*DefaultApi* | [**listRelatedStories**](docs/DefaultApi.md#listrelatedstories) | **POST** /related_stories | List related stories
-*DefaultApi* | [**listStories**](docs/DefaultApi.md#liststories) | **GET** /stories | List Stories
-*DefaultApi* | [**listTimeSeries**](docs/DefaultApi.md#listtimeseries) | **GET** /time_series | List time series
-*DefaultApi* | [**listTrends**](docs/DefaultApi.md#listtrends) | **GET** /trends | List trends
+*DefaultApi* | [**listAutocompletes**](docs/Api/DefaultApi.md#listautocompletes) | **GET** /autocompletes | List autocompletes
+*DefaultApi* | [**listCoverages**](docs/Api/DefaultApi.md#listcoverages) | **POST** /coverages | List coverages
+*DefaultApi* | [**listHistograms**](docs/Api/DefaultApi.md#listhistograms) | **GET** /histograms | List histograms
+*DefaultApi* | [**listRelatedStories**](docs/Api/DefaultApi.md#listrelatedstories) | **POST** /related_stories | List related stories
+*DefaultApi* | [**listStories**](docs/Api/DefaultApi.md#liststories) | **GET** /stories | List Stories
+*DefaultApi* | [**listTimeSeries**](docs/Api/DefaultApi.md#listtimeseries) | **GET** /time_series | List time series
+*DefaultApi* | [**listTrends**](docs/Api/DefaultApi.md#listtrends) | **GET** /trends | List trends
 
 
 ## Documentation For Models
 
- - [Author](docs/Author.md)
- - [Autocomplete](docs/Autocomplete.md)
- - [Autocompletes](docs/Autocompletes.md)
- - [Category](docs/Category.md)
- - [CategoryLinks](docs/CategoryLinks.md)
- - [Coverages](docs/Coverages.md)
- - [Entities](docs/Entities.md)
- - [Entity](docs/Entity.md)
- - [EntityLinks](docs/EntityLinks.md)
- - [Error](docs/Error.md)
- - [ErrorLinks](docs/ErrorLinks.md)
- - [Errors](docs/Errors.md)
- - [HistogramInterval](docs/HistogramInterval.md)
- - [Histograms](docs/Histograms.md)
- - [Location](docs/Location.md)
- - [Media](docs/Media.md)
- - [RelatedStories](docs/RelatedStories.md)
- - [Scope](docs/Scope.md)
- - [Sentiment](docs/Sentiment.md)
- - [Sentiments](docs/Sentiments.md)
- - [ShareCount](docs/ShareCount.md)
- - [ShareCounts](docs/ShareCounts.md)
- - [Source](docs/Source.md)
- - [Stories](docs/Stories.md)
- - [Story](docs/Story.md)
- - [StoryCluster](docs/StoryCluster.md)
- - [StoryLinks](docs/StoryLinks.md)
- - [Summary](docs/Summary.md)
- - [TimeSeries](docs/TimeSeries.md)
- - [TimeSeriesList](docs/TimeSeriesList.md)
- - [Trend](docs/Trend.md)
- - [Trends](docs/Trends.md)
+ - [Author](docs/Model/Author.md)
+ - [Autocomplete](docs/Model/Autocomplete.md)
+ - [Autocompletes](docs/Model/Autocompletes.md)
+ - [Category](docs/Model/Category.md)
+ - [CategoryLinks](docs/Model/CategoryLinks.md)
+ - [Coverages](docs/Model/Coverages.md)
+ - [Entities](docs/Model/Entities.md)
+ - [Entity](docs/Model/Entity.md)
+ - [EntityLinks](docs/Model/EntityLinks.md)
+ - [Error](docs/Model/Error.md)
+ - [ErrorLinks](docs/Model/ErrorLinks.md)
+ - [Errors](docs/Model/Errors.md)
+ - [HistogramInterval](docs/Model/HistogramInterval.md)
+ - [Histograms](docs/Model/Histograms.md)
+ - [Location](docs/Model/Location.md)
+ - [Media](docs/Model/Media.md)
+ - [RelatedStories](docs/Model/RelatedStories.md)
+ - [Scope](docs/Model/Scope.md)
+ - [Sentiment](docs/Model/Sentiment.md)
+ - [Sentiments](docs/Model/Sentiments.md)
+ - [ShareCount](docs/Model/ShareCount.md)
+ - [ShareCounts](docs/Model/ShareCounts.md)
+ - [Source](docs/Model/Source.md)
+ - [Stories](docs/Model/Stories.md)
+ - [Story](docs/Model/Story.md)
+ - [StoryCluster](docs/Model/StoryCluster.md)
+ - [StoryLinks](docs/Model/StoryLinks.md)
+ - [Summary](docs/Model/Summary.md)
+ - [TimeSeries](docs/Model/TimeSeries.md)
+ - [TimeSeriesList](docs/Model/TimeSeriesList.md)
+ - [Trend](docs/Model/Trend.md)
+ - [Trends](docs/Model/Trends.md)
 
 
 ## Documentation For Authorization
-
 
 ## app_id
 

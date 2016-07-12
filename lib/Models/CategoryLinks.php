@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * CategoryLinks Class Doc Comment
  *
@@ -45,70 +46,69 @@ class CategoryLinks implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'CategoryLinks';
+    protected static $apiModelName = 'CategoryLinks';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'self' => 'string',
         'parent' => 'string'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'self' => 'self',
         'parent' => 'parent'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'self' => 'setSelf',
         'parent' => 'setParent'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'self' => 'getSelf',
         'parent' => 'getParent'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $self A URL points to the category
-      * @var string
-      */
-    protected $self;
-    /**
-      * $parent A URL points to the parent category
-      * @var string
-      */
-    protected $parent;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -116,94 +116,119 @@ class CategoryLinks implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->self = $data["self"];
-            $this->parent = $data["parent"];
-        }
+        $this->container['self'] = isset($data['self']) ? $data['self'] : null;
+        $this->container['parent'] = isset($data['parent']) ? $data['parent'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets self
      * @return string
      */
     public function getSelf()
     {
-        return $this->self;
+        return $this->container['self'];
     }
-  
+
     /**
      * Sets self
-     * @param string $self A URL points to the category
+     * @param string $self A URL pointing to the category
      * @return $this
      */
     public function setSelf($self)
     {
-        
-        $this->self = $self;
+        $this->container['self'] = $self;
+
         return $this;
     }
+
     /**
      * Gets parent
      * @return string
      */
     public function getParent()
     {
-        return $this->parent;
+        return $this->container['parent'];
     }
-  
+
     /**
      * Sets parent
-     * @param string $parent A URL points to the parent category
+     * @param string $parent A URL pointing to the parent category
      * @return $this
      */
     public function setParent($parent)
     {
-        
-        $this->parent = $parent;
+        $this->container['parent'] = $parent;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string

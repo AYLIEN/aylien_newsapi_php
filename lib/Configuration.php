@@ -40,7 +40,7 @@ namespace Aylien\NewsApi;
 class Configuration
 {
 
-    private static $_defaultConfiguration = null;
+    private static $defaultConfiguration = null;
 
     /**
      * Associate array to store API key(s)
@@ -99,11 +99,11 @@ class Configuration
     protected $curlTimeout = 0;
 
     /**
-     * User agent of the HTTP request, set to "aylien-news-api/0.0.1/php" by default
+     * User agent of the HTTP request, set to "aylien-news-api/0.1.0/php" by default
      *
      * @var string
      */
-    protected $userAgent = "aylien-news-api/0.0.1/php";
+    protected $userAgent = "aylien-news-api/0.1.0/php";
 
     /**
      * Debug switch (default set to false)
@@ -480,11 +480,11 @@ class Configuration
      */
     public static function getDefaultConfiguration()
     {
-        if (self::$_defaultConfiguration == null) {
-            self::$_defaultConfiguration = new Configuration();
+        if (self::$defaultConfiguration == null) {
+            self::$defaultConfiguration = new Configuration();
         }
 
-        return self::$_defaultConfiguration;
+        return self::$defaultConfiguration;
     }
 
     /**
@@ -496,7 +496,7 @@ class Configuration
      */
     public static function setDefaultConfiguration(Configuration $config)
     {
-        self::$_defaultConfiguration = $config;
+        self::$defaultConfiguration = $config;
     }
 
     /**
@@ -506,14 +506,12 @@ class Configuration
      */
     public static function toDebugReport()
     {
-        $report  = "PHP SDK (Aylien\NewsApi) Debug Report:\n";
-        $report .= "    OS: ".php_uname()."\n";
-        $report .= "    PHP Version: ".phpversion()."\n";
-        $report .= "    OpenAPI Spec Version: 1.0\n";
-        $report .= "    SDK Package Version: 0.0.1\n";
-        $report .= "    Temp Folder Path: ".self::getDefaultConfiguration()->getTempFolderPath()."\n";
+        $report  = 'PHP SDK (Aylien\NewsApi) Debug Report:' . PHP_EOL;
+        $report .= '    OS: ' . php_uname() . PHP_EOL;
+        $report .= '    PHP Version: ' . phpversion() . PHP_EOL;
+        $report .= '    SDK Package Version: 0.1.0' . PHP_EOL;
+        $report .= '    Temp Folder Path: ' . self::getDefaultConfiguration()->getTempFolderPath() . PHP_EOL;
 
         return $report;
     }
-
 }

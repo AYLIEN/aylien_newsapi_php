@@ -46,81 +46,85 @@ class DefaultApi
 
     /**
      * API Client
+     *
      * @var \Aylien\NewsApi\ApiClient instance of the ApiClient
      */
     protected $apiClient;
-  
+
     /**
      * Constructor
+     *
      * @param \Aylien\NewsApi\ApiClient|null $apiClient The api client to use
      */
-    function __construct($apiClient = null)
+    public function __construct(\Aylien\NewsApi\ApiClient $apiClient = null)
     {
         if ($apiClient == null) {
             $apiClient = new ApiClient();
             $apiClient->getConfig()->setHost('https://api.newsapi.aylien.com/api/v1');
         }
-  
+
         $this->apiClient = $apiClient;
     }
-  
+
     /**
      * Get API client
+     *
      * @return \Aylien\NewsApi\ApiClient get the API client
      */
     public function getApiClient()
     {
         return $this->apiClient;
     }
-  
+
     /**
      * Set the API client
+     *
      * @param \Aylien\NewsApi\ApiClient $apiClient set the API client
+     *
      * @return DefaultApi
      */
-    public function setApiClient(ApiClient $apiClient)
+    public function setApiClient(\Aylien\NewsApi\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
         return $this;
     }
-  
+
     /**
-     * listAutocompletes
+     * Operation listAutocompletes
      *
      * List autocompletes
      *
      * <ul>
      *    <li>['language']         <i><u>string</u></i> This parameter is used for autocompletes whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to en)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param string $type This parameter is used for defining the type of autocompletes. (required)
-     * @param string $term This parameter is used for finding autocomplete objects whose contains the specified value. (required)
+     * @param string $term This parameter is used for finding autocomplete objects that contain the specified value. (required)
      * @param array $opts (See above)
      * @return \Aylien\NewsApi\Models\Autocompletes
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
     public function listAutocompletes($type, $term, $opts = array())
     {
-        list($response) = $this->listAutocompletesWithHttpInfo ($type, $term, $opts);
-        return $response; 
+        list($response) = $this->listAutocompletesWithHttpInfo($type, $term, $opts);
+        return $response;
     }
 
-
     /**
-     * listAutocompletes
+     * Operation listAutocompletesWithHttpInfo
      *
      * List autocompletes
      *
      * <ul>
      *    <li>['language']         <i><u>string</u></i> This parameter is used for autocompletes whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to en)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param string $type This parameter is used for defining the type of autocompletes. (required)
-     * @param string $term This parameter is used for finding autocomplete objects whose contains the specified value. (required)
+     * @param string $term This parameter is used for finding autocomplete objects that contain the specified value. (required)
      * @param array $opts (See above)
-     * @return \Aylien\NewsApi\Models\Autocompletes, HTTP status code, HTTP response headers (array of strings)
+     * @return Array of \Aylien\NewsApi\Models\Autocompletes, HTTP status code, HTTP response headers (array of strings)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
     public function listAutocompletesWithHttpInfo($type, $term, $opts = array())
@@ -137,7 +141,17 @@ class DefaultApi
         if ($term === null) {
             throw new \InvalidArgumentException('Missing the required parameter $term when calling listAutocompletes');
         }
-  
+        if (strlen($term) < 1) {
+            throw new \InvalidArgumentException('invalid length for "$term" when calling DefaultApi.listAutocompletes, must be bigger than or equal to 1.');
+        }
+
+        if ($per_page !== null && $per_page > 100.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listAutocompletes, must be smaller than or equal to 100.0.');
+        }
+        if ($per_page !== null && $per_page < 1.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listAutocompletes, must be bigger than or equal to 1.0.');
+        }
+
         // parse inputs
         $resourcePath = "/autocompletes";
         $httpBody = '';
@@ -149,136 +163,139 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
+
         // query params
         if ($type !== null) {
             $queryParams['type'] = $this->apiClient->getSerializer()->toQueryValue($type);
-        }// query params
+        }
+        // query params
         if ($term !== null) {
             $queryParams['term'] = $this->apiClient->getSerializer()->toQueryValue($term);
-        }// query params
+        }
+        // query params
         if ($language !== null) {
             $queryParams['language'] = $this->apiClient->getSerializer()->toQueryValue($language);
-        }// query params
+        }
+        // query params
         if ($per_page !== null) {
             $queryParams['per_page'] = $this->apiClient->getSerializer()->toQueryValue($per_page);
         }
-        
-        
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'GET',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\Autocompletes'
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\Autocompletes',
+                '/autocompletes'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Autocompletes', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Autocompletes', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Autocompletes', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listCoverages
+     * Operation listCoverages
      *
      * List coverages
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
      *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
      *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
      *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
      *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use url or title and body for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
+     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -287,56 +304,61 @@ class DefaultApi
      */
     public function listCoverages($opts = array())
     {
-        list($response) = $this->listCoveragesWithHttpInfo ($opts);
-        return $response; 
+        list($response) = $this->listCoveragesWithHttpInfo($opts);
+        return $response;
     }
 
-
     /**
-     * listCoveragesWithHttpInfo
+     * Operation listCoveragesWithHttpInfo
      *
      * List coverages
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
      *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
      *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
      *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
      *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use url or title and body for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
+     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -365,6 +387,10 @@ class DefaultApi
         $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
         $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
         $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
         $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
@@ -377,6 +403,8 @@ class DefaultApi
         $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
         $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
         $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
+        $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
         $story_id = (!empty($opts['story_id']) ? $opts['story_id'] : null);
         $story_url = (!empty($opts['story_url']) ? $opts['story_url'] : null);
@@ -385,7 +413,30 @@ class DefaultApi
         $story_published_at = (!empty($opts['story_published_at']) ? $opts['story_published_at'] : null);
         $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
-  
+        
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if ($per_page !== null && $per_page > 100.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listCoverages, must be smaller than or equal to 100.0.');
+        }
+        if ($per_page !== null && $per_page < 1.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listCoverages, must be bigger than or equal to 1.0.');
+        }
+
         // parse inputs
         $resourcePath = "/coverages";
         $httpBody = '';
@@ -397,233 +448,293 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
-        
-        
-        
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // form params
         if ($id !== null) {
             $formParams['id[]'] = $this->apiClient->getSerializer()->toFormValue($id);
-        }// form params
+        }
+        // form params
         if ($title !== null) {
             $formParams['title'] = $this->apiClient->getSerializer()->toFormValue($title);
-        }// form params
+        }
+        // form params
         if ($body !== null) {
             $formParams['body'] = $this->apiClient->getSerializer()->toFormValue($body);
-        }// form params
+        }
+        // form params
         if ($text !== null) {
             $formParams['text'] = $this->apiClient->getSerializer()->toFormValue($text);
-        }// form params
+        }
+        // form params
         if ($language !== null) {
             $formParams['language[]'] = $this->apiClient->getSerializer()->toFormValue($language);
-        }// form params
+        }
+        // form params
         if ($published_at_start !== null) {
             $formParams['published_at.start'] = $this->apiClient->getSerializer()->toFormValue($published_at_start);
-        }// form params
+        }
+        // form params
         if ($published_at_end !== null) {
             $formParams['published_at.end'] = $this->apiClient->getSerializer()->toFormValue($published_at_end);
-        }// form params
+        }
+        // form params
         if ($categories_taxonomy !== null) {
             $formParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toFormValue($categories_taxonomy);
-        }// form params
+        }
+        // form params
         if ($categories_confident !== null) {
             $formParams['categories.confident'] = $this->apiClient->getSerializer()->toFormValue($categories_confident);
-        }// form params
+        }
+        // form params
         if ($categories_id !== null) {
             $formParams['categories.id[]'] = $this->apiClient->getSerializer()->toFormValue($categories_id);
-        }// form params
+        }
+        // form params
         if ($categories_level !== null) {
             $formParams['categories.level[]'] = $this->apiClient->getSerializer()->toFormValue($categories_level);
-        }// form params
+        }
+        // form params
         if ($entities_title_text !== null) {
             $formParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_text);
-        }// form params
+        }
+        // form params
         if ($entities_title_type !== null) {
             $formParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_type);
-        }// form params
+        }
+        // form params
         if ($entities_title_links_dbpedia !== null) {
             $formParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_links_dbpedia);
-        }// form params
+        }
+        // form params
         if ($entities_body_text !== null) {
             $formParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_text);
-        }// form params
+        }
+        // form params
         if ($entities_body_type !== null) {
             $formParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_type);
-        }// form params
+        }
+        // form params
         if ($entities_body_links_dbpedia !== null) {
             $formParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_links_dbpedia);
-        }// form params
+        }
+        // form params
         if ($sentiment_title_polarity !== null) {
             $formParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toFormValue($sentiment_title_polarity);
-        }// form params
+        }
+        // form params
         if ($sentiment_body_polarity !== null) {
             $formParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toFormValue($sentiment_body_polarity);
-        }// form params
+        }
+        // form params
+        if ($media_images_count_min !== null) {
+            $formParams['media.images.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_min);
+        }
+        // form params
+        if ($media_images_count_max !== null) {
+            $formParams['media.images.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_max);
+        }
+        // form params
+        if ($media_videos_count_min !== null) {
+            $formParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_min);
+        }
+        // form params
+        if ($media_videos_count_max !== null) {
+            $formParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_max);
+        }
+        // form params
         if ($author_id !== null) {
             $formParams['author.id[]'] = $this->apiClient->getSerializer()->toFormValue($author_id);
-        }// form params
+        }
+        // form params
         if ($author_name !== null) {
             $formParams['author.name'] = $this->apiClient->getSerializer()->toFormValue($author_name);
-        }// form params
+        }
+        // form params
         if ($source_id !== null) {
             $formParams['source.id[]'] = $this->apiClient->getSerializer()->toFormValue($source_id);
-        }// form params
+        }
+        // form params
         if ($source_name !== null) {
             $formParams['source.name[]'] = $this->apiClient->getSerializer()->toFormValue($source_name);
-        }// form params
+        }
+        // form params
         if ($source_domain !== null) {
             $formParams['source.domain[]'] = $this->apiClient->getSerializer()->toFormValue($source_domain);
-        }// form params
+        }
+        // form params
         if ($source_locations_country !== null) {
             $formParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_country);
-        }// form params
+        }
+        // form params
         if ($source_locations_state !== null) {
             $formParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_state);
-        }// form params
+        }
+        // form params
         if ($source_locations_city !== null) {
             $formParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_city);
-        }// form params
+        }
+        // form params
         if ($source_scopes_country !== null) {
             $formParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_country);
-        }// form params
+        }
+        // form params
         if ($source_scopes_state !== null) {
             $formParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_state);
-        }// form params
+        }
+        // form params
         if ($source_scopes_city !== null) {
             $formParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_city);
-        }// form params
+        }
+        // form params
         if ($source_scopes_level !== null) {
             $formParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_level);
-        }// form params
+        }
+        // form params
+        if ($cluster !== null) {
+            $formParams['cluster'] = $this->apiClient->getSerializer()->toFormValue($cluster);
+        }
+        // form params
+        if ($cluster_algorithm !== null) {
+            $formParams['cluster.algorithm'] = $this->apiClient->getSerializer()->toFormValue($cluster_algorithm);
+        }
+        // form params
         if ($return !== null) {
             $formParams['return[]'] = $this->apiClient->getSerializer()->toFormValue($return);
-        }// form params
+        }
+        // form params
         if ($story_id !== null) {
             $formParams['story_id'] = $this->apiClient->getSerializer()->toFormValue($story_id);
-        }// form params
+        }
+        // form params
         if ($story_url !== null) {
             $formParams['story_url'] = $this->apiClient->getSerializer()->toFormValue($story_url);
-        }// form params
+        }
+        // form params
         if ($story_title !== null) {
             $formParams['story_title'] = $this->apiClient->getSerializer()->toFormValue($story_title);
-        }// form params
+        }
+        // form params
         if ($story_body !== null) {
             $formParams['story_body'] = $this->apiClient->getSerializer()->toFormValue($story_body);
-        }// form params
+        }
+        // form params
         if ($story_published_at !== null) {
             $formParams['story_published_at'] = $this->apiClient->getSerializer()->toFormValue($story_published_at);
-        }// form params
+        }
+        // form params
         if ($story_language !== null) {
             $formParams['story_language'] = $this->apiClient->getSerializer()->toFormValue($story_language);
-        }// form params
+        }
+        // form params
         if ($per_page !== null) {
             $formParams['per_page'] = $this->apiClient->getSerializer()->toFormValue($per_page);
         }
         
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'POST',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\Coverages'
+                $resourcePath,
+                'POST',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\Coverages',
+                '/coverages'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Coverages', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Coverages', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Coverages', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listHistograms
+     * Operation listHistograms
      *
      * List histograms
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
      *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
      *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
@@ -631,54 +742,56 @@ class DefaultApi
      * </ul>
      *
      * @param array $opts (See above)
-     *
      * @return \Aylien\NewsApi\Models\Histograms
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
     public function listHistograms($opts = array())
     {
-        list($response) = $this->listHistogramsWithHttpInfo ($opts);
-        return $response; 
+        list($response) = $this->listHistogramsWithHttpInfo($opts);
+        return $response;
     }
 
-
     /**
-     * listHistogramsWithHttpInfo
+     * Operation listHistogramsWithHttpInfo
      *
      * List histograms
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
      *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
      *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
@@ -690,8 +803,8 @@ class DefaultApi
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
     public function listHistogramsWithHttpInfo($opts = array())
-    {
-        
+    {   
+    
         // define parameters
         $id = (!empty($opts['id']) ? $opts['id'] : null);
         $title = (!empty($opts['title']) ? $opts['title'] : null);
@@ -712,6 +825,10 @@ class DefaultApi
         $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
         $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
         $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
         $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
@@ -729,6 +846,22 @@ class DefaultApi
         $interval_width = (!empty($opts['interval_width']) ? $opts['interval_width'] : null);
         $field = (!empty($opts['field']) ? $opts['field'] : null);
         
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
         // parse inputs
         $resourcePath = "/histograms";
         $httpBody = '';
@@ -740,292 +873,342 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
+
         // query params
         if (is_array($id)) {
             $id = $this->apiClient->getSerializer()->serializeCollection($id, 'multi', true);
         }
         if ($id !== null) {
             $queryParams['id[]'] = $this->apiClient->getSerializer()->toQueryValue($id);
-        }// query params
+        }
+        // query params
         if ($title !== null) {
             $queryParams['title'] = $this->apiClient->getSerializer()->toQueryValue($title);
-        }// query params
+        }
+        // query params
         if ($body !== null) {
             $queryParams['body'] = $this->apiClient->getSerializer()->toQueryValue($body);
-        }// query params
+        }
+        // query params
         if ($text !== null) {
             $queryParams['text'] = $this->apiClient->getSerializer()->toQueryValue($text);
-        }// query params
+        }
+        // query params
         if (is_array($language)) {
             $language = $this->apiClient->getSerializer()->serializeCollection($language, 'multi', true);
         }
         if ($language !== null) {
             $queryParams['language[]'] = $this->apiClient->getSerializer()->toQueryValue($language);
-        }// query params
+        }
+        // query params
         if ($published_at_start !== null) {
             $queryParams['published_at.start'] = $this->apiClient->getSerializer()->toQueryValue($published_at_start);
-        }// query params
+        }
+        // query params
         if ($published_at_end !== null) {
             $queryParams['published_at.end'] = $this->apiClient->getSerializer()->toQueryValue($published_at_end);
-        }// query params
+        }
+        // query params
         if ($categories_taxonomy !== null) {
             $queryParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toQueryValue($categories_taxonomy);
-        }// query params
+        }
+        // query params
         if ($categories_confident !== null) {
             $queryParams['categories.confident'] = $this->apiClient->getSerializer()->toQueryValue($categories_confident);
-        }// query params
+        }
+        // query params
         if (is_array($categories_id)) {
             $categories_id = $this->apiClient->getSerializer()->serializeCollection($categories_id, 'multi', true);
         }
         if ($categories_id !== null) {
             $queryParams['categories.id[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_id);
-        }// query params
+        }
+        // query params
         if (is_array($categories_level)) {
             $categories_level = $this->apiClient->getSerializer()->serializeCollection($categories_level, 'multi', true);
         }
         if ($categories_level !== null) {
             $queryParams['categories.level[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_level);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_text)) {
             $entities_title_text = $this->apiClient->getSerializer()->serializeCollection($entities_title_text, 'multi', true);
         }
         if ($entities_title_text !== null) {
             $queryParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_type)) {
             $entities_title_type = $this->apiClient->getSerializer()->serializeCollection($entities_title_type, 'multi', true);
         }
         if ($entities_title_type !== null) {
             $queryParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_links_dbpedia)) {
             $entities_title_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_title_links_dbpedia, 'multi', true);
         }
         if ($entities_title_links_dbpedia !== null) {
             $queryParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_links_dbpedia);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_text)) {
             $entities_body_text = $this->apiClient->getSerializer()->serializeCollection($entities_body_text, 'multi', true);
         }
         if ($entities_body_text !== null) {
             $queryParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_type)) {
             $entities_body_type = $this->apiClient->getSerializer()->serializeCollection($entities_body_type, 'multi', true);
         }
         if ($entities_body_type !== null) {
             $queryParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_links_dbpedia)) {
             $entities_body_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_body_links_dbpedia, 'multi', true);
         }
         if ($entities_body_links_dbpedia !== null) {
             $queryParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_links_dbpedia);
-        }// query params
+        }
+        // query params
         if ($sentiment_title_polarity !== null) {
             $queryParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_title_polarity);
-        }// query params
+        }
+        // query params
         if ($sentiment_body_polarity !== null) {
             $queryParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_body_polarity);
-        }// query params
+        }
+        // query params
+        if ($media_images_count_min !== null) {
+            $queryParams['media.images.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_min);
+        }
+        // query params
+        if ($media_images_count_max !== null) {
+            $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
+        }
+        // query params
+        if ($media_videos_count_min !== null) {
+            $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
+        }
+        // query params
+        if ($media_videos_count_max !== null) {
+            $queryParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_max);
+        }
+        // query params
         if (is_array($author_id)) {
             $author_id = $this->apiClient->getSerializer()->serializeCollection($author_id, 'multi', true);
         }
         if ($author_id !== null) {
             $queryParams['author.id[]'] = $this->apiClient->getSerializer()->toQueryValue($author_id);
-        }// query params
+        }
+        // query params
         if ($author_name !== null) {
             $queryParams['author.name'] = $this->apiClient->getSerializer()->toQueryValue($author_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_id)) {
             $source_id = $this->apiClient->getSerializer()->serializeCollection($source_id, 'multi', true);
         }
         if ($source_id !== null) {
             $queryParams['source.id[]'] = $this->apiClient->getSerializer()->toQueryValue($source_id);
-        }// query params
+        }
+        // query params
         if (is_array($source_name)) {
             $source_name = $this->apiClient->getSerializer()->serializeCollection($source_name, 'multi', true);
         }
         if ($source_name !== null) {
             $queryParams['source.name[]'] = $this->apiClient->getSerializer()->toQueryValue($source_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_domain)) {
             $source_domain = $this->apiClient->getSerializer()->serializeCollection($source_domain, 'multi', true);
         }
         if ($source_domain !== null) {
             $queryParams['source.domain[]'] = $this->apiClient->getSerializer()->toQueryValue($source_domain);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_country)) {
             $source_locations_country = $this->apiClient->getSerializer()->serializeCollection($source_locations_country, 'multi', true);
         }
         if ($source_locations_country !== null) {
             $queryParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_state)) {
             $source_locations_state = $this->apiClient->getSerializer()->serializeCollection($source_locations_state, 'multi', true);
         }
         if ($source_locations_state !== null) {
             $queryParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_city)) {
             $source_locations_city = $this->apiClient->getSerializer()->serializeCollection($source_locations_city, 'multi', true);
         }
         if ($source_locations_city !== null) {
             $queryParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_country)) {
             $source_scopes_country = $this->apiClient->getSerializer()->serializeCollection($source_scopes_country, 'multi', true);
         }
         if ($source_scopes_country !== null) {
             $queryParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_state)) {
             $source_scopes_state = $this->apiClient->getSerializer()->serializeCollection($source_scopes_state, 'multi', true);
         }
         if ($source_scopes_state !== null) {
             $queryParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_city)) {
             $source_scopes_city = $this->apiClient->getSerializer()->serializeCollection($source_scopes_city, 'multi', true);
         }
         if ($source_scopes_city !== null) {
             $queryParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_level)) {
             $source_scopes_level = $this->apiClient->getSerializer()->serializeCollection($source_scopes_level, 'multi', true);
         }
         if ($source_scopes_level !== null) {
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
-        }// query params
+        }
+        // query params
         if ($interval_start !== null) {
             $queryParams['interval.start'] = $this->apiClient->getSerializer()->toQueryValue($interval_start);
-        }// query params
+        }
+        // query params
         if ($interval_end !== null) {
             $queryParams['interval.end'] = $this->apiClient->getSerializer()->toQueryValue($interval_end);
-        }// query params
+        }
+        // query params
         if ($interval_width !== null) {
             $queryParams['interval.width'] = $this->apiClient->getSerializer()->toQueryValue($interval_width);
-        }// query params
+        }
+        // query params
         if ($field !== null) {
             $queryParams['field'] = $this->apiClient->getSerializer()->toQueryValue($field);
         }
-        
-        
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'GET',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\Histograms'
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\Histograms',
+                '/histograms'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Histograms', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Histograms', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Histograms', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listRelatedStories
+     * Operation listRelatedStories
      *
      * List related stories
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
      *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
      *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
      *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
      *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting result by the specified value. (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting the result by the specified value. (optional)</li>
+     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -1035,56 +1218,61 @@ class DefaultApi
      */
     public function listRelatedStories($opts = array())
     {
-        list($response) = $this->listRelatedStoriesWithHttpInfo ($opts);
-        return $response; 
+        list($response) = $this->listRelatedStoriesWithHttpInfo($opts);
+        return $response;
     }
 
-
     /**
-     * listRelatedStoriesWithHttpInfo
+     * Operation listRelatedStoriesWithHttpInfo
      *
      * List related stories
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
      *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
      *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
      *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
      *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting result by the specified value. (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting the result by the specified value. (optional)</li>
+     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -1093,47 +1281,29 @@ class DefaultApi
      */
     public function listRelatedStoriesWithHttpInfo($opts = array())
     {
-        // define parameters
-        $id = (!empty($opts['id']) ? $opts['id'] : null);
-        $title = (!empty($opts['title']) ? $opts['title'] : null);
-        $body = (!empty($opts['body']) ? $opts['body'] : null);
-        $text = (!empty($opts['text']) ? $opts['text'] : null);
-        $language = (!empty($opts['language']) ? $opts['language'] : null);
-        $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
-        $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
-        $categories_taxonomy = (!empty($opts['categories_taxonomy']) ? $opts['categories_taxonomy'] : null);
-        $categories_confident = (!empty($opts['categories_confident']) ? $opts['categories_confident'] : null);
-        $categories_id = (!empty($opts['categories_id']) ? $opts['categories_id'] : null);
-        $categories_level = (!empty($opts['categories_level']) ? $opts['categories_level'] : null);
-        $entities_title_text = (!empty($opts['entities_title_text']) ? $opts['entities_title_text'] : null);
-        $entities_title_type = (!empty($opts['entities_title_type']) ? $opts['entities_title_type'] : null);
-        $entities_title_links_dbpedia = (!empty($opts['entities_title_links_dbpedia']) ? $opts['entities_title_links_dbpedia'] : null);
-        $entities_body_text = (!empty($opts['entities_body_text']) ? $opts['entities_body_text'] : null);
-        $entities_body_type = (!empty($opts['entities_body_type']) ? $opts['entities_body_type'] : null);
-        $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
-        $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
-        $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
-        $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
-        $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
-        $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
-        $source_name = (!empty($opts['source_name']) ? $opts['source_name'] : null);
-        $source_domain = (!empty($opts['source_domain']) ? $opts['source_domain'] : null);
-        $source_locations_country = (!empty($opts['source_locations_country']) ? $opts['source_locations_country'] : null);
-        $source_locations_state = (!empty($opts['source_locations_state']) ? $opts['source_locations_state'] : null);
-        $source_locations_city = (!empty($opts['source_locations_city']) ? $opts['source_locations_city'] : null);
-        $source_scopes_country = (!empty($opts['source_scopes_country']) ? $opts['source_scopes_country'] : null);
-        $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
-        $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
-        $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
-        $return = (!empty($opts['return']) ? $opts['return'] : null);
-        $story_id = (!empty($opts['story_id']) ? $opts['story_id'] : null);
-        $story_url = (!empty($opts['story_url']) ? $opts['story_url'] : null);
-        $story_title = (!empty($opts['story_title']) ? $opts['story_title'] : null);
-        $story_body = (!empty($opts['story_body']) ? $opts['story_body'] : null);
-        $boost_by = (!empty($opts['boost_by']) ? $opts['boost_by'] : null);
-        $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
-        $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
-  
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($per_page !== null && $per_page > 100.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listRelatedStories, must be smaller than or equal to 100.0.');
+        }
+        if ($per_page !== null && $per_page < 1.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 1.0.');
+        }
+
         // parse inputs
         $resourcePath = "/related_stories";
         $httpBody = '';
@@ -1145,240 +1315,300 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
-        
-        
-        
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // form params
         if ($id !== null) {
             $formParams['id[]'] = $this->apiClient->getSerializer()->toFormValue($id);
-        }// form params
+        }
+        // form params
         if ($title !== null) {
             $formParams['title'] = $this->apiClient->getSerializer()->toFormValue($title);
-        }// form params
+        }
+        // form params
         if ($body !== null) {
             $formParams['body'] = $this->apiClient->getSerializer()->toFormValue($body);
-        }// form params
+        }
+        // form params
         if ($text !== null) {
             $formParams['text'] = $this->apiClient->getSerializer()->toFormValue($text);
-        }// form params
+        }
+        // form params
         if ($language !== null) {
             $formParams['language[]'] = $this->apiClient->getSerializer()->toFormValue($language);
-        }// form params
+        }
+        // form params
         if ($published_at_start !== null) {
             $formParams['published_at.start'] = $this->apiClient->getSerializer()->toFormValue($published_at_start);
-        }// form params
+        }
+        // form params
         if ($published_at_end !== null) {
             $formParams['published_at.end'] = $this->apiClient->getSerializer()->toFormValue($published_at_end);
-        }// form params
+        }
+        // form params
         if ($categories_taxonomy !== null) {
             $formParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toFormValue($categories_taxonomy);
-        }// form params
+        }
+        // form params
         if ($categories_confident !== null) {
             $formParams['categories.confident'] = $this->apiClient->getSerializer()->toFormValue($categories_confident);
-        }// form params
+        }
+        // form params
         if ($categories_id !== null) {
             $formParams['categories.id[]'] = $this->apiClient->getSerializer()->toFormValue($categories_id);
-        }// form params
+        }
+        // form params
         if ($categories_level !== null) {
             $formParams['categories.level[]'] = $this->apiClient->getSerializer()->toFormValue($categories_level);
-        }// form params
+        }
+        // form params
         if ($entities_title_text !== null) {
             $formParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_text);
-        }// form params
+        }
+        // form params
         if ($entities_title_type !== null) {
             $formParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_type);
-        }// form params
+        }
+        // form params
         if ($entities_title_links_dbpedia !== null) {
             $formParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toFormValue($entities_title_links_dbpedia);
-        }// form params
+        }
+        // form params
         if ($entities_body_text !== null) {
             $formParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_text);
-        }// form params
+        }
+        // form params
         if ($entities_body_type !== null) {
             $formParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_type);
-        }// form params
+        }
+        // form params
         if ($entities_body_links_dbpedia !== null) {
             $formParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toFormValue($entities_body_links_dbpedia);
-        }// form params
+        }
+        // form params
         if ($sentiment_title_polarity !== null) {
             $formParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toFormValue($sentiment_title_polarity);
-        }// form params
+        }
+        // form params
         if ($sentiment_body_polarity !== null) {
             $formParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toFormValue($sentiment_body_polarity);
-        }// form params
+        }
+        // form params
+        if ($media_images_count_min !== null) {
+            $formParams['media.images.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_min);
+        }
+        // form params
+        if ($media_images_count_max !== null) {
+            $formParams['media.images.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_max);
+        }
+        // form params
+        if ($media_videos_count_min !== null) {
+            $formParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_min);
+        }
+        // form params
+        if ($media_videos_count_max !== null) {
+            $formParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_max);
+        }
+        // form params
         if ($author_id !== null) {
             $formParams['author.id[]'] = $this->apiClient->getSerializer()->toFormValue($author_id);
-        }// form params
+        }
+        // form params
         if ($author_name !== null) {
             $formParams['author.name'] = $this->apiClient->getSerializer()->toFormValue($author_name);
-        }// form params
+        }
+        // form params
         if ($source_id !== null) {
             $formParams['source.id[]'] = $this->apiClient->getSerializer()->toFormValue($source_id);
-        }// form params
+        }
+        // form params
         if ($source_name !== null) {
             $formParams['source.name[]'] = $this->apiClient->getSerializer()->toFormValue($source_name);
-        }// form params
+        }
+        // form params
         if ($source_domain !== null) {
             $formParams['source.domain[]'] = $this->apiClient->getSerializer()->toFormValue($source_domain);
-        }// form params
+        }
+        // form params
         if ($source_locations_country !== null) {
             $formParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_country);
-        }// form params
+        }
+        // form params
         if ($source_locations_state !== null) {
             $formParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_state);
-        }// form params
+        }
+        // form params
         if ($source_locations_city !== null) {
             $formParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toFormValue($source_locations_city);
-        }// form params
+        }
+        // form params
         if ($source_scopes_country !== null) {
             $formParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_country);
-        }// form params
+        }
+        // form params
         if ($source_scopes_state !== null) {
             $formParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_state);
-        }// form params
+        }
+        // form params
         if ($source_scopes_city !== null) {
             $formParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_city);
-        }// form params
+        }
+        // form params
         if ($source_scopes_level !== null) {
             $formParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_level);
-        }// form params
+        }
+        // form params
+        if ($cluster !== null) {
+            $formParams['cluster'] = $this->apiClient->getSerializer()->toFormValue($cluster);
+        }
+        // form params
+        if ($cluster_algorithm !== null) {
+            $formParams['cluster.algorithm'] = $this->apiClient->getSerializer()->toFormValue($cluster_algorithm);
+        }
+        // form params
         if ($return !== null) {
             $formParams['return[]'] = $this->apiClient->getSerializer()->toFormValue($return);
-        }// form params
+        }
+        // form params
         if ($story_id !== null) {
             $formParams['story_id'] = $this->apiClient->getSerializer()->toFormValue($story_id);
-        }// form params
+        }
+        // form params
         if ($story_url !== null) {
             $formParams['story_url'] = $this->apiClient->getSerializer()->toFormValue($story_url);
-        }// form params
+        }
+        // form params
         if ($story_title !== null) {
             $formParams['story_title'] = $this->apiClient->getSerializer()->toFormValue($story_title);
-        }// form params
+        }
+        // form params
         if ($story_body !== null) {
             $formParams['story_body'] = $this->apiClient->getSerializer()->toFormValue($story_body);
-        }// form params
+        }
+        // form params
         if ($boost_by !== null) {
             $formParams['boost_by'] = $this->apiClient->getSerializer()->toFormValue($boost_by);
-        }// form params
+        }
+        // form params
         if ($story_language !== null) {
             $formParams['story_language'] = $this->apiClient->getSerializer()->toFormValue($story_language);
-        }// form params
+        }
+        // form params
         if ($per_page !== null) {
             $formParams['per_page'] = $this->apiClient->getSerializer()->toFormValue($per_page);
         }
         
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'POST',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\RelatedStories'
+                $resourcePath,
+                'POST',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\RelatedStories',
+                '/related_stories'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\RelatedStories', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\RelatedStories', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\RelatedStories', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listStories
+     * Operation listStories
      *
      * List Stories
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_by']        <i><u>string</u></i> This parameter is used for changing the order column of the result. (optional, default to published_at)</li>
-     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order column of the result. (optional, default to published_at)</li>
+     *    <li>['sort_by']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
+     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order direction of the result. (optional, default to desc)</li>
      *    <li>['cursor']        <i><u>string</u></i> This parameter is used for finding a specific page. (optional, default to *)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 10)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 10)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -1388,62 +1618,65 @@ class DefaultApi
      */
     public function listStories($opts = array())
     {
-        list($response) = $this->listStoriesWithHttpInfo ($opts);
-        return $response; 
+        list($response) = $this->listStoriesWithHttpInfo($opts);
+        return $response;
     }
 
-
     /**
-     * listStoriesWithHttpInfo
+     * Operation listStoriesWithHttpInfo
      *
      * List Stories
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
+     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_by']        <i><u>string</u></i> This parameter is used for changing the order column of the result. (optional, default to published_at)</li>
-     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order column of the result. (optional, default to published_at)</li>
+     *    <li>['sort_by']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
+     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order direction of the result. (optional, default to desc)</li>
      *    <li>['cursor']        <i><u>string</u></i> This parameter is used for finding a specific page. (optional, default to *)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 10)</li>
+     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 10)</li>
      * </ul>
      *
      * @param array $opts (See above)
      * @return Array of \Aylien\NewsApi\Models\Stories, HTTP status code, HTTP response headers (array of strings)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
-    public function listStoriesWithHttpInfo($opts = array())
+    public function listStoriesWithHttpInfo($opts)
     {
         // define parameters
         $id = (!empty($opts['id']) ? $opts['id'] : null);
@@ -1465,6 +1698,10 @@ class DefaultApi
         $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
         $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
         $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
         $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
@@ -1485,6 +1722,29 @@ class DefaultApi
         $cursor = (!empty($opts['cursor']) ? $opts['cursor'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if ($per_page !== null && $per_page > 100.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listStories, must be smaller than or equal to 100.0.');
+        }
+        if ($per_page !== null && $per_page < 1.0) {
+            throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listStories, must be bigger than or equal to 1.0.');
+        }
+
         // parse inputs
         $resourcePath = "/stories";
         $httpBody = '';
@@ -1496,297 +1756,348 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
+
         // query params
         if (is_array($id)) {
             $id = $this->apiClient->getSerializer()->serializeCollection($id, 'multi', true);
         }
         if ($id !== null) {
             $queryParams['id[]'] = $this->apiClient->getSerializer()->toQueryValue($id);
-        }// query params
+        }
+        // query params
         if ($title !== null) {
             $queryParams['title'] = $this->apiClient->getSerializer()->toQueryValue($title);
-        }// query params
+        }
+        // query params
         if ($body !== null) {
             $queryParams['body'] = $this->apiClient->getSerializer()->toQueryValue($body);
-        }// query params
+        }
+        // query params
         if ($text !== null) {
             $queryParams['text'] = $this->apiClient->getSerializer()->toQueryValue($text);
-        }// query params
+        }
+        // query params
         if (is_array($language)) {
             $language = $this->apiClient->getSerializer()->serializeCollection($language, 'multi', true);
         }
         if ($language !== null) {
             $queryParams['language[]'] = $this->apiClient->getSerializer()->toQueryValue($language);
-        }// query params
+        }
+        // query params
         if ($published_at_start !== null) {
             $queryParams['published_at.start'] = $this->apiClient->getSerializer()->toQueryValue($published_at_start);
-        }// query params
+        }
+        // query params
         if ($published_at_end !== null) {
             $queryParams['published_at.end'] = $this->apiClient->getSerializer()->toQueryValue($published_at_end);
-        }// query params
+        }
+        // query params
         if ($categories_taxonomy !== null) {
             $queryParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toQueryValue($categories_taxonomy);
-        }// query params
+        }
+        // query params
         if ($categories_confident !== null) {
             $queryParams['categories.confident'] = $this->apiClient->getSerializer()->toQueryValue($categories_confident);
-        }// query params
+        }
+        // query params
         if (is_array($categories_id)) {
             $categories_id = $this->apiClient->getSerializer()->serializeCollection($categories_id, 'multi', true);
         }
         if ($categories_id !== null) {
             $queryParams['categories.id[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_id);
-        }// query params
+        }
+        // query params
         if (is_array($categories_level)) {
             $categories_level = $this->apiClient->getSerializer()->serializeCollection($categories_level, 'multi', true);
         }
         if ($categories_level !== null) {
             $queryParams['categories.level[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_level);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_text)) {
             $entities_title_text = $this->apiClient->getSerializer()->serializeCollection($entities_title_text, 'multi', true);
         }
         if ($entities_title_text !== null) {
             $queryParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_type)) {
             $entities_title_type = $this->apiClient->getSerializer()->serializeCollection($entities_title_type, 'multi', true);
         }
         if ($entities_title_type !== null) {
             $queryParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_links_dbpedia)) {
             $entities_title_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_title_links_dbpedia, 'multi', true);
         }
         if ($entities_title_links_dbpedia !== null) {
             $queryParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_links_dbpedia);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_text)) {
             $entities_body_text = $this->apiClient->getSerializer()->serializeCollection($entities_body_text, 'multi', true);
         }
         if ($entities_body_text !== null) {
             $queryParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_type)) {
             $entities_body_type = $this->apiClient->getSerializer()->serializeCollection($entities_body_type, 'multi', true);
         }
         if ($entities_body_type !== null) {
             $queryParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_links_dbpedia)) {
             $entities_body_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_body_links_dbpedia, 'multi', true);
         }
         if ($entities_body_links_dbpedia !== null) {
             $queryParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_links_dbpedia);
-        }// query params
+        }
+        // query params
         if ($sentiment_title_polarity !== null) {
             $queryParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_title_polarity);
-        }// query params
+        }
+        // query params
         if ($sentiment_body_polarity !== null) {
             $queryParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_body_polarity);
-        }// query params
+        }
+        // query params
+        if ($media_images_count_min !== null) {
+            $queryParams['media.images.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_min);
+        }
+        // query params
+        if ($media_images_count_max !== null) {
+            $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
+        }
+        // query params
+        if ($media_videos_count_min !== null) {
+            $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
+        }
+        // query params
+        if ($media_videos_count_max !== null) {
+            $queryParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_max);
+        }
+        // query params
         if (is_array($author_id)) {
             $author_id = $this->apiClient->getSerializer()->serializeCollection($author_id, 'multi', true);
         }
         if ($author_id !== null) {
             $queryParams['author.id[]'] = $this->apiClient->getSerializer()->toQueryValue($author_id);
-        }// query params
+        }
+        // query params
         if ($author_name !== null) {
             $queryParams['author.name'] = $this->apiClient->getSerializer()->toQueryValue($author_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_id)) {
             $source_id = $this->apiClient->getSerializer()->serializeCollection($source_id, 'multi', true);
         }
         if ($source_id !== null) {
             $queryParams['source.id[]'] = $this->apiClient->getSerializer()->toQueryValue($source_id);
-        }// query params
+        }
+        // query params
         if (is_array($source_name)) {
             $source_name = $this->apiClient->getSerializer()->serializeCollection($source_name, 'multi', true);
         }
         if ($source_name !== null) {
             $queryParams['source.name[]'] = $this->apiClient->getSerializer()->toQueryValue($source_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_domain)) {
             $source_domain = $this->apiClient->getSerializer()->serializeCollection($source_domain, 'multi', true);
         }
         if ($source_domain !== null) {
             $queryParams['source.domain[]'] = $this->apiClient->getSerializer()->toQueryValue($source_domain);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_country)) {
             $source_locations_country = $this->apiClient->getSerializer()->serializeCollection($source_locations_country, 'multi', true);
         }
         if ($source_locations_country !== null) {
             $queryParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_state)) {
             $source_locations_state = $this->apiClient->getSerializer()->serializeCollection($source_locations_state, 'multi', true);
         }
         if ($source_locations_state !== null) {
             $queryParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_city)) {
             $source_locations_city = $this->apiClient->getSerializer()->serializeCollection($source_locations_city, 'multi', true);
         }
         if ($source_locations_city !== null) {
             $queryParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_country)) {
             $source_scopes_country = $this->apiClient->getSerializer()->serializeCollection($source_scopes_country, 'multi', true);
         }
         if ($source_scopes_country !== null) {
             $queryParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_state)) {
             $source_scopes_state = $this->apiClient->getSerializer()->serializeCollection($source_scopes_state, 'multi', true);
         }
         if ($source_scopes_state !== null) {
             $queryParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_city)) {
             $source_scopes_city = $this->apiClient->getSerializer()->serializeCollection($source_scopes_city, 'multi', true);
         }
         if ($source_scopes_city !== null) {
             $queryParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_level)) {
             $source_scopes_level = $this->apiClient->getSerializer()->serializeCollection($source_scopes_level, 'multi', true);
         }
         if ($source_scopes_level !== null) {
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
-        }// query params
+        }
+        // query params
         if ($cluster !== null) {
             $queryParams['cluster'] = $this->apiClient->getSerializer()->toQueryValue($cluster);
-        }// query params
+        }
+        // query params
         if ($cluster_algorithm !== null) {
             $queryParams['cluster.algorithm'] = $this->apiClient->getSerializer()->toQueryValue($cluster_algorithm);
-        }// query params
+        }
+        // query params
         if (is_array($return)) {
             $return = $this->apiClient->getSerializer()->serializeCollection($return, 'multi', true);
         }
         if ($return !== null) {
             $queryParams['return[]'] = $this->apiClient->getSerializer()->toQueryValue($return);
-        }// query params
+        }
+        // query params
         if ($sort_by !== null) {
             $queryParams['sort_by'] = $this->apiClient->getSerializer()->toQueryValue($sort_by);
-        }// query params
+        }
+        // query params
         if ($sort_direction !== null) {
             $queryParams['sort_direction'] = $this->apiClient->getSerializer()->toQueryValue($sort_direction);
-        }// query params
+        }
+        // query params
         if ($cursor !== null) {
             $queryParams['cursor'] = $this->apiClient->getSerializer()->toQueryValue($cursor);
-        }// query params
+        }
+        // query params
         if ($per_page !== null) {
             $queryParams['per_page'] = $this->apiClient->getSerializer()->toQueryValue($per_page);
         }
-        
-        
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'GET',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\Stories'
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\Stories',
+                '/stories'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Stories', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Stories', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Stories', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listTimeSeries
+     * Operation listTimeSeries
      *
      * List time series
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['period']        <i><u>string</u></i> The size of each date range expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
+     *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -1797,48 +2108,51 @@ class DefaultApi
     public function listTimeSeries($opts = array())
     {
         list($response) = $this->listTimeSeriesWithHttpInfo($opts);
-        return $response; 
+        return $response;
     }
 
-
     /**
-     * listTimeSeriesWithHttpInfo
+     * Operation listTimeSeriesWithHttpInfo
      *
      * List time series
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['period']        <i><u>string</u></i> The size of each date range expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
+     *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
      * </ul>
      *
      * @param array $opts (See above)
@@ -1847,7 +2161,6 @@ class DefaultApi
      */
     public function listTimeSeriesWithHttpInfo($opts = array())
     {
-        
         // define parameters
         $id = (!empty($opts['id']) ? $opts['id'] : null);
         $title = (!empty($opts['title']) ? $opts['title'] : null);
@@ -1866,6 +2179,10 @@ class DefaultApi
         $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
         $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
         $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
         $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
@@ -1881,7 +2198,23 @@ class DefaultApi
         $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
         $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
         $period = (!empty($opts['period']) ? $opts['period'] : null);
-  
+        
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
         // parse inputs
         $resourcePath = "/time_series";
         $httpBody = '';
@@ -1893,275 +2226,320 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
+
         // query params
         if (is_array($id)) {
             $id = $this->apiClient->getSerializer()->serializeCollection($id, 'multi', true);
         }
         if ($id !== null) {
             $queryParams['id[]'] = $this->apiClient->getSerializer()->toQueryValue($id);
-        }// query params
+        }
+        // query params
         if ($title !== null) {
             $queryParams['title'] = $this->apiClient->getSerializer()->toQueryValue($title);
-        }// query params
+        }
+        // query params
         if ($body !== null) {
             $queryParams['body'] = $this->apiClient->getSerializer()->toQueryValue($body);
-        }// query params
+        }
+        // query params
         if ($text !== null) {
             $queryParams['text'] = $this->apiClient->getSerializer()->toQueryValue($text);
-        }// query params
+        }
+        // query params
         if (is_array($language)) {
             $language = $this->apiClient->getSerializer()->serializeCollection($language, 'multi', true);
         }
         if ($language !== null) {
             $queryParams['language[]'] = $this->apiClient->getSerializer()->toQueryValue($language);
-        }// query params
+        }
+        // query params
         if ($categories_taxonomy !== null) {
             $queryParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toQueryValue($categories_taxonomy);
-        }// query params
+        }
+        // query params
         if ($categories_confident !== null) {
             $queryParams['categories.confident'] = $this->apiClient->getSerializer()->toQueryValue($categories_confident);
-        }// query params
+        }
+        // query params
         if (is_array($categories_id)) {
             $categories_id = $this->apiClient->getSerializer()->serializeCollection($categories_id, 'multi', true);
         }
         if ($categories_id !== null) {
             $queryParams['categories.id[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_id);
-        }// query params
+        }
+        // query params
         if (is_array($categories_level)) {
             $categories_level = $this->apiClient->getSerializer()->serializeCollection($categories_level, 'multi', true);
         }
         if ($categories_level !== null) {
             $queryParams['categories.level[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_level);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_text)) {
             $entities_title_text = $this->apiClient->getSerializer()->serializeCollection($entities_title_text, 'multi', true);
         }
         if ($entities_title_text !== null) {
             $queryParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_type)) {
             $entities_title_type = $this->apiClient->getSerializer()->serializeCollection($entities_title_type, 'multi', true);
         }
         if ($entities_title_type !== null) {
             $queryParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_links_dbpedia)) {
             $entities_title_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_title_links_dbpedia, 'multi', true);
         }
         if ($entities_title_links_dbpedia !== null) {
             $queryParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_links_dbpedia);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_text)) {
             $entities_body_text = $this->apiClient->getSerializer()->serializeCollection($entities_body_text, 'multi', true);
         }
         if ($entities_body_text !== null) {
             $queryParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_type)) {
             $entities_body_type = $this->apiClient->getSerializer()->serializeCollection($entities_body_type, 'multi', true);
         }
         if ($entities_body_type !== null) {
             $queryParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_links_dbpedia)) {
             $entities_body_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_body_links_dbpedia, 'multi', true);
         }
         if ($entities_body_links_dbpedia !== null) {
             $queryParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_links_dbpedia);
-        }// query params
+        }
+        // query params
         if ($sentiment_title_polarity !== null) {
             $queryParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_title_polarity);
-        }// query params
+        }
+        // query params
         if ($sentiment_body_polarity !== null) {
             $queryParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_body_polarity);
-        }// query params
+        }
+        // query params
+        if ($media_images_count_min !== null) {
+            $queryParams['media.images.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_min);
+        }
+        // query params
+        if ($media_images_count_max !== null) {
+            $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
+        }
+        // query params
+        if ($media_videos_count_min !== null) {
+            $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
+        }
+        // query params
+        if ($media_videos_count_max !== null) {
+            $queryParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_max);
+        }
+        // query params
         if (is_array($author_id)) {
             $author_id = $this->apiClient->getSerializer()->serializeCollection($author_id, 'multi', true);
         }
         if ($author_id !== null) {
             $queryParams['author.id[]'] = $this->apiClient->getSerializer()->toQueryValue($author_id);
-        }// query params
+        }
+        // query params
         if ($author_name !== null) {
             $queryParams['author.name'] = $this->apiClient->getSerializer()->toQueryValue($author_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_id)) {
             $source_id = $this->apiClient->getSerializer()->serializeCollection($source_id, 'multi', true);
         }
         if ($source_id !== null) {
             $queryParams['source.id[]'] = $this->apiClient->getSerializer()->toQueryValue($source_id);
-        }// query params
+        }
+        // query params
         if (is_array($source_name)) {
             $source_name = $this->apiClient->getSerializer()->serializeCollection($source_name, 'multi', true);
         }
         if ($source_name !== null) {
             $queryParams['source.name[]'] = $this->apiClient->getSerializer()->toQueryValue($source_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_domain)) {
             $source_domain = $this->apiClient->getSerializer()->serializeCollection($source_domain, 'multi', true);
         }
         if ($source_domain !== null) {
             $queryParams['source.domain[]'] = $this->apiClient->getSerializer()->toQueryValue($source_domain);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_country)) {
             $source_locations_country = $this->apiClient->getSerializer()->serializeCollection($source_locations_country, 'multi', true);
         }
         if ($source_locations_country !== null) {
             $queryParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_state)) {
             $source_locations_state = $this->apiClient->getSerializer()->serializeCollection($source_locations_state, 'multi', true);
         }
         if ($source_locations_state !== null) {
             $queryParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_city)) {
             $source_locations_city = $this->apiClient->getSerializer()->serializeCollection($source_locations_city, 'multi', true);
         }
         if ($source_locations_city !== null) {
             $queryParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_country)) {
             $source_scopes_country = $this->apiClient->getSerializer()->serializeCollection($source_scopes_country, 'multi', true);
         }
         if ($source_scopes_country !== null) {
             $queryParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_state)) {
             $source_scopes_state = $this->apiClient->getSerializer()->serializeCollection($source_scopes_state, 'multi', true);
         }
         if ($source_scopes_state !== null) {
             $queryParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_city)) {
             $source_scopes_city = $this->apiClient->getSerializer()->serializeCollection($source_scopes_city, 'multi', true);
         }
         if ($source_scopes_city !== null) {
             $queryParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_level)) {
             $source_scopes_level = $this->apiClient->getSerializer()->serializeCollection($source_scopes_level, 'multi', true);
         }
         if ($source_scopes_level !== null) {
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
-        }// query params
+        }
+        // query params
         if ($published_at_start !== null) {
             $queryParams['published_at.start'] = $this->apiClient->getSerializer()->toQueryValue($published_at_start);
-        }// query params
+        }
+        // query params
         if ($published_at_end !== null) {
             $queryParams['published_at.end'] = $this->apiClient->getSerializer()->toQueryValue($published_at_end);
-        }// query params
+        }
+        // query params
         if ($period !== null) {
             $queryParams['period'] = $this->apiClient->getSerializer()->toQueryValue($period);
         }
-        
-        
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'GET',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\TimeSeriesList'
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\TimeSeriesList',
+                '/time_series'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\TimeSeriesList', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\TimeSeriesList', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\TimeSeriesList', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
     /**
-     * listTrends
+     * Operation listTrends
      *
      * List trends
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
      * </ul>
      *
@@ -2172,48 +2550,51 @@ class DefaultApi
      */
     public function listTrends($opts = array())
     {
-        list($response) = $this->listTrendsWithHttpInfo ($opts);
-        return $response; 
+        list($response) = $this->listTrendsWithHttpInfo($opts);
+        return $response;
     }
 
-
     /**
-     * listTrendsWithHttpInfo
+     * Operation listTrendsWithHttpInfo
      *
      * List trends
      *
      * <ul>
      *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for specifying number of the items in each page. (optional, default to 3)</li>
+     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
      *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining type of the taxonomy for the rest of categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories whose categories id is the specified value. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories whose categories level is the specified value. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in title is the specified value. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in title is the specified value. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in title is the specified value. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities text in body is the specified value. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities type in body is the specified value. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used for finding stories whose entities dbpedia url in body is the specified value. (optional)</li>
+     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
+     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
+     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
+     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
+     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
+     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
+     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
+     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
+     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
+     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
      *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
      *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
+     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
+     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
      *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
      *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
      *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
      *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
      *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes state/province is the specified value. (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes city is the specified value. (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes level is the specified value. (optional)</li>
+     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
      * </ul>
      *
@@ -2223,41 +2604,22 @@ class DefaultApi
      */
     public function listTrendsWithHttpInfo($opts = array())
     {
-        
-        // define parameters
-        $id = (!empty($opts['id']) ? $opts['id'] : null);
-        $title = (!empty($opts['title']) ? $opts['title'] : null);
-        $body = (!empty($opts['body']) ? $opts['body'] : null);
-        $text = (!empty($opts['text']) ? $opts['text'] : null);
-        $language = (!empty($opts['language']) ? $opts['language'] : null);
-        $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
-        $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
-        $categories_taxonomy = (!empty($opts['categories_taxonomy']) ? $opts['categories_taxonomy'] : null);
-        $categories_confident = (!empty($opts['categories_confident']) ? $opts['categories_confident'] : null);
-        $categories_id = (!empty($opts['categories_id']) ? $opts['categories_id'] : null);
-        $categories_level = (!empty($opts['categories_level']) ? $opts['categories_level'] : null);
-        $entities_title_text = (!empty($opts['entities_title_text']) ? $opts['entities_title_text'] : null);
-        $entities_title_type = (!empty($opts['entities_title_type']) ? $opts['entities_title_type'] : null);
-        $entities_title_links_dbpedia = (!empty($opts['entities_title_links_dbpedia']) ? $opts['entities_title_links_dbpedia'] : null);
-        $entities_body_text = (!empty($opts['entities_body_text']) ? $opts['entities_body_text'] : null);
-        $entities_body_type = (!empty($opts['entities_body_type']) ? $opts['entities_body_type'] : null);
-        $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
-        $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
-        $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
-        $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
-        $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
-        $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
-        $source_name = (!empty($opts['source_name']) ? $opts['source_name'] : null);
-        $source_domain = (!empty($opts['source_domain']) ? $opts['source_domain'] : null);
-        $source_locations_country = (!empty($opts['source_locations_country']) ? $opts['source_locations_country'] : null);
-        $source_locations_state = (!empty($opts['source_locations_state']) ? $opts['source_locations_state'] : null);
-        $source_locations_city = (!empty($opts['source_locations_city']) ? $opts['source_locations_city'] : null);
-        $source_scopes_country = (!empty($opts['source_scopes_country']) ? $opts['source_scopes_country'] : null);
-        $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
-        $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
-        $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
-        $field = (!empty($opts['field']) ? $opts['field'] : null);
-  
+        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
         // parse inputs
         $resourcePath = "/trends";
         $httpBody = '';
@@ -2269,236 +2631,277 @@ class DefaultApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
-  
+
         // query params
         if (is_array($id)) {
             $id = $this->apiClient->getSerializer()->serializeCollection($id, 'multi', true);
         }
         if ($id !== null) {
             $queryParams['id[]'] = $this->apiClient->getSerializer()->toQueryValue($id);
-        }// query params
+        }
+        // query params
         if ($title !== null) {
             $queryParams['title'] = $this->apiClient->getSerializer()->toQueryValue($title);
-        }// query params
+        }
+        // query params
         if ($body !== null) {
             $queryParams['body'] = $this->apiClient->getSerializer()->toQueryValue($body);
-        }// query params
+        }
+        // query params
         if ($text !== null) {
             $queryParams['text'] = $this->apiClient->getSerializer()->toQueryValue($text);
-        }// query params
+        }
+        // query params
         if (is_array($language)) {
             $language = $this->apiClient->getSerializer()->serializeCollection($language, 'multi', true);
         }
         if ($language !== null) {
             $queryParams['language[]'] = $this->apiClient->getSerializer()->toQueryValue($language);
-        }// query params
+        }
+        // query params
         if ($published_at_start !== null) {
             $queryParams['published_at.start'] = $this->apiClient->getSerializer()->toQueryValue($published_at_start);
-        }// query params
+        }
+        // query params
         if ($published_at_end !== null) {
             $queryParams['published_at.end'] = $this->apiClient->getSerializer()->toQueryValue($published_at_end);
-        }// query params
+        }
+        // query params
         if ($categories_taxonomy !== null) {
             $queryParams['categories.taxonomy'] = $this->apiClient->getSerializer()->toQueryValue($categories_taxonomy);
-        }// query params
+        }
+        // query params
         if ($categories_confident !== null) {
             $queryParams['categories.confident'] = $this->apiClient->getSerializer()->toQueryValue($categories_confident);
-        }// query params
+        }
+        // query params
         if (is_array($categories_id)) {
             $categories_id = $this->apiClient->getSerializer()->serializeCollection($categories_id, 'multi', true);
         }
         if ($categories_id !== null) {
             $queryParams['categories.id[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_id);
-        }// query params
+        }
+        // query params
         if (is_array($categories_level)) {
             $categories_level = $this->apiClient->getSerializer()->serializeCollection($categories_level, 'multi', true);
         }
         if ($categories_level !== null) {
             $queryParams['categories.level[]'] = $this->apiClient->getSerializer()->toQueryValue($categories_level);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_text)) {
             $entities_title_text = $this->apiClient->getSerializer()->serializeCollection($entities_title_text, 'multi', true);
         }
         if ($entities_title_text !== null) {
             $queryParams['entities.title.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_type)) {
             $entities_title_type = $this->apiClient->getSerializer()->serializeCollection($entities_title_type, 'multi', true);
         }
         if ($entities_title_type !== null) {
             $queryParams['entities.title.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_title_links_dbpedia)) {
             $entities_title_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_title_links_dbpedia, 'multi', true);
         }
         if ($entities_title_links_dbpedia !== null) {
             $queryParams['entities.title.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_title_links_dbpedia);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_text)) {
             $entities_body_text = $this->apiClient->getSerializer()->serializeCollection($entities_body_text, 'multi', true);
         }
         if ($entities_body_text !== null) {
             $queryParams['entities.body.text[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_text);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_type)) {
             $entities_body_type = $this->apiClient->getSerializer()->serializeCollection($entities_body_type, 'multi', true);
         }
         if ($entities_body_type !== null) {
             $queryParams['entities.body.type[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_type);
-        }// query params
+        }
+        // query params
         if (is_array($entities_body_links_dbpedia)) {
             $entities_body_links_dbpedia = $this->apiClient->getSerializer()->serializeCollection($entities_body_links_dbpedia, 'multi', true);
         }
         if ($entities_body_links_dbpedia !== null) {
             $queryParams['entities.body.links.dbpedia[]'] = $this->apiClient->getSerializer()->toQueryValue($entities_body_links_dbpedia);
-        }// query params
+        }
+        // query params
         if ($sentiment_title_polarity !== null) {
             $queryParams['sentiment.title.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_title_polarity);
-        }// query params
+        }
+        // query params
         if ($sentiment_body_polarity !== null) {
             $queryParams['sentiment.body.polarity'] = $this->apiClient->getSerializer()->toQueryValue($sentiment_body_polarity);
-        }// query params
+        }
+        // query params
+        if ($media_images_count_min !== null) {
+            $queryParams['media.images.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_min);
+        }
+        // query params
+        if ($media_images_count_max !== null) {
+            $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
+        }
+        // query params
+        if ($media_videos_count_min !== null) {
+            $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
+        }
+        // query params
+        if ($media_videos_count_max !== null) {
+            $queryParams['media.videos.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_max);
+        }
+        // query params
         if (is_array($author_id)) {
             $author_id = $this->apiClient->getSerializer()->serializeCollection($author_id, 'multi', true);
         }
         if ($author_id !== null) {
             $queryParams['author.id[]'] = $this->apiClient->getSerializer()->toQueryValue($author_id);
-        }// query params
+        }
+        // query params
         if ($author_name !== null) {
             $queryParams['author.name'] = $this->apiClient->getSerializer()->toQueryValue($author_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_id)) {
             $source_id = $this->apiClient->getSerializer()->serializeCollection($source_id, 'multi', true);
         }
         if ($source_id !== null) {
             $queryParams['source.id[]'] = $this->apiClient->getSerializer()->toQueryValue($source_id);
-        }// query params
+        }
+        // query params
         if (is_array($source_name)) {
             $source_name = $this->apiClient->getSerializer()->serializeCollection($source_name, 'multi', true);
         }
         if ($source_name !== null) {
             $queryParams['source.name[]'] = $this->apiClient->getSerializer()->toQueryValue($source_name);
-        }// query params
+        }
+        // query params
         if (is_array($source_domain)) {
             $source_domain = $this->apiClient->getSerializer()->serializeCollection($source_domain, 'multi', true);
         }
         if ($source_domain !== null) {
             $queryParams['source.domain[]'] = $this->apiClient->getSerializer()->toQueryValue($source_domain);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_country)) {
             $source_locations_country = $this->apiClient->getSerializer()->serializeCollection($source_locations_country, 'multi', true);
         }
         if ($source_locations_country !== null) {
             $queryParams['source.locations.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_state)) {
             $source_locations_state = $this->apiClient->getSerializer()->serializeCollection($source_locations_state, 'multi', true);
         }
         if ($source_locations_state !== null) {
             $queryParams['source.locations.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_locations_city)) {
             $source_locations_city = $this->apiClient->getSerializer()->serializeCollection($source_locations_city, 'multi', true);
         }
         if ($source_locations_city !== null) {
             $queryParams['source.locations.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_locations_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_country)) {
             $source_scopes_country = $this->apiClient->getSerializer()->serializeCollection($source_scopes_country, 'multi', true);
         }
         if ($source_scopes_country !== null) {
             $queryParams['source.scopes.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_country);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_state)) {
             $source_scopes_state = $this->apiClient->getSerializer()->serializeCollection($source_scopes_state, 'multi', true);
         }
         if ($source_scopes_state !== null) {
             $queryParams['source.scopes.state[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_state);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_city)) {
             $source_scopes_city = $this->apiClient->getSerializer()->serializeCollection($source_scopes_city, 'multi', true);
         }
         if ($source_scopes_city !== null) {
             $queryParams['source.scopes.city[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_city);
-        }// query params
+        }
+        // query params
         if (is_array($source_scopes_level)) {
             $source_scopes_level = $this->apiClient->getSerializer()->serializeCollection($source_scopes_level, 'multi', true);
         }
         if ($source_scopes_level !== null) {
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
-        }// query params
+        }
+        // query params
         if ($field !== null) {
             $queryParams['field'] = $this->apiClient->getSerializer()->toQueryValue($field);
         }
-        
-        
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
-  
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
-        
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-Key');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-Key'] = $apiKey;
         }
-        
-
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('X-AYLIEN-NewsAPI-Application-ID');
         if (strlen($apiKey) !== 0) {
             $headerParams['X-AYLIEN-NewsAPI-Application-ID'] = $apiKey;
         }
-        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
-                $resourcePath, 'GET',
-                $queryParams, $httpBody,
-                $headerParams, '\Aylien\NewsApi\Models\Trends'
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\Aylien\NewsApi\Models\Trends',
+                '/trends'
             );
-            if (!$response) {
-                return array(null, $statusCode, $httpHeader);
-            }
 
             return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Trends', $httpHeader), $statusCode, $httpHeader);
-                    } catch (ApiException $e) {
-            switch ($e->getCode()) { 
-            case 200:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Trends', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 401:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 404:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 422:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 429:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
-            case 500:
-                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
-                $e->setResponseObject($data);
-                break;
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Trends', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 404:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 422:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 429:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 500:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Aylien\NewsApi\Models\Errors', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
-  
+
             throw $e;
         }
     }
+
 }

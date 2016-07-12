@@ -1,6 +1,6 @@
 {
     "name": "aylien/newsapi",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.",
     "keywords": [
         "aylien",
@@ -32,5 +32,8 @@
     },
     "autoload": {
         "psr-4": { "Aylien\\NewsApi\\" : "lib/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Aylien\\NewsApi\\" : "test/" }
     }
 }

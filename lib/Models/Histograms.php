@@ -29,6 +29,7 @@
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
+
 /**
  * Histograms Class Doc Comment
  *
@@ -45,97 +46,81 @@ class Histograms implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    static $apiModelName = 'Histograms';
+    protected static $apiModelName = 'Histograms';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization 
+      * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    static $apiTypes = array(
+    protected static $apiTypes = array(
         'intervals' => '\Aylien\NewsApi\Models\HistogramInterval[]',
         'interval_start' => 'int',
         'interval_end' => 'int',
         'interval_width' => 'int',
         'field' => 'string'
     );
-  
-    static function apiTypes() {
+
+    public static function apiTypes()
+    {
         return self::$apiTypes;
     }
 
-    /** 
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[] 
-      */
-    static $attributeMap = array(
+    /**
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
+    protected static $attributeMap = array(
         'intervals' => 'intervals',
         'interval_start' => 'interval.start',
         'interval_end' => 'interval.end',
         'interval_width' => 'interval.width',
         'field' => 'field'
     );
-  
-    static function attributeMap() {
+
+    public static function attributeMap()
+    {
         return self::$attributeMap;
     }
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
-    static $setters = array(
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = array(
         'intervals' => 'setIntervals',
         'interval_start' => 'setIntervalStart',
         'interval_end' => 'setIntervalEnd',
         'interval_width' => 'setIntervalWidth',
         'field' => 'setField'
     );
-  
-    static function setters() {
+
+    public static function setters()
+    {
         return self::$setters;
     }
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
-    static $getters = array(
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = array(
         'intervals' => 'getIntervals',
         'interval_start' => 'getIntervalStart',
         'interval_end' => 'getIntervalEnd',
         'interval_width' => 'getIntervalWidth',
         'field' => 'getField'
     );
-  
-    static function getters() {
+
+    public static function getters()
+    {
         return self::$getters;
     }
 
     /**
-      * $intervals The intervals of the histograms
-      * @var \Aylien\NewsApi\Models\HistogramInterval[]
-      */
-    protected $intervals;
-    /**
-      * $interval_start The start interval of the histogram
-      * @var int
-      */
-    protected $interval_start;
-    /**
-      * $interval_end The end interval of the histogram
-      * @var int
-      */
-    protected $interval_end;
-    /**
-      * $interval_width The width of the histogram
-      * @var int
-      */
-    protected $interval_width;
-    /**
-      * $field 
-      * @var string
-      */
-    protected $field;
+     * Associative array for storing property values
+     * @var mixed[]
+     */
+    protected $container = array();
 
     /**
      * Constructor
@@ -143,25 +128,45 @@ class Histograms implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        
-        
-        if ($data != null) {
-            $this->intervals = $data["intervals"];
-            $this->interval_start = $data["interval_start"];
-            $this->interval_end = $data["interval_end"];
-            $this->interval_width = $data["interval_width"];
-            $this->field = $data["field"];
-        }
+        $this->container['intervals'] = isset($data['intervals']) ? $data['intervals'] : null;
+        $this->container['interval_start'] = isset($data['interval_start']) ? $data['interval_start'] : null;
+        $this->container['interval_end'] = isset($data['interval_end']) ? $data['interval_end'] : null;
+        $this->container['interval_width'] = isset($data['interval_width']) ? $data['interval_width'] : null;
+        $this->container['field'] = isset($data['field']) ? $data['field'] : null;
     }
+
+    /**
+     * show all the invalid properties with reasons.
+     *
+     * @return array invalid properties with reasons
+     */
+    public function listInvalidProperties()
+    {
+        $invalid_properties = array();
+        return $invalid_properties;
+    }
+
+    /**
+     * validate all the properties in the model
+     * return true if all passed
+     *
+     * @return bool True if all properteis are valid
+     */
+    public function valid()
+    {
+        return true;
+    }
+
+
     /**
      * Gets intervals
      * @return \Aylien\NewsApi\Models\HistogramInterval[]
      */
     public function getIntervals()
     {
-        return $this->intervals;
+        return $this->container['intervals'];
     }
-  
+
     /**
      * Sets intervals
      * @param \Aylien\NewsApi\Models\HistogramInterval[] $intervals The intervals of the histograms
@@ -169,19 +174,20 @@ class Histograms implements ArrayAccess
      */
     public function setIntervals($intervals)
     {
-        
-        $this->intervals = $intervals;
+        $this->container['intervals'] = $intervals;
+
         return $this;
     }
+
     /**
      * Gets interval_start
      * @return int
      */
     public function getIntervalStart()
     {
-        return $this->interval_start;
+        return $this->container['interval_start'];
     }
-  
+
     /**
      * Sets interval_start
      * @param int $interval_start The start interval of the histogram
@@ -189,19 +195,20 @@ class Histograms implements ArrayAccess
      */
     public function setIntervalStart($interval_start)
     {
-        
-        $this->interval_start = $interval_start;
+        $this->container['interval_start'] = $interval_start;
+
         return $this;
     }
+
     /**
      * Gets interval_end
      * @return int
      */
     public function getIntervalEnd()
     {
-        return $this->interval_end;
+        return $this->container['interval_end'];
     }
-  
+
     /**
      * Sets interval_end
      * @param int $interval_end The end interval of the histogram
@@ -209,19 +216,20 @@ class Histograms implements ArrayAccess
      */
     public function setIntervalEnd($interval_end)
     {
-        
-        $this->interval_end = $interval_end;
+        $this->container['interval_end'] = $interval_end;
+
         return $this;
     }
+
     /**
      * Gets interval_width
      * @return int
      */
     public function getIntervalWidth()
     {
-        return $this->interval_width;
+        return $this->container['interval_width'];
     }
-  
+
     /**
      * Sets interval_width
      * @param int $interval_width The width of the histogram
@@ -229,71 +237,76 @@ class Histograms implements ArrayAccess
      */
     public function setIntervalWidth($interval_width)
     {
-        
-        $this->interval_width = $interval_width;
+        $this->container['interval_width'] = $interval_width;
+
         return $this;
     }
+
     /**
      * Gets field
      * @return string
      */
     public function getField()
     {
-        return $this->field;
+        return $this->container['field'];
     }
-  
+
     /**
      * Sets field
-     * @param string $field 
+     * @param string $field
      * @return $this
      */
     public function setField($field)
     {
-        
-        $this->field = $field;
+        $this->container['field'] = $field;
+
         return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return boolean
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->container[$offset]);
     }
-  
+
     /**
      * Gets offset.
-     * @param  integer $offset Offset 
-     * @return mixed 
+     * @param  integer $offset Offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
-  
+
     /**
      * Sets value based on offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @param  mixed   $value  Value to be set
      * @return void
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        if (is_null($offset)) {
+            $this->container[] = $value;
+        } else {
+            $this->container[$offset] = $value;
+        }
     }
-  
+
     /**
      * Unsets offset.
-     * @param  integer $offset Offset 
+     * @param  integer $offset Offset
      * @return void
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->container[$offset]);
     }
-  
+
     /**
      * Gets the string presentation of the object
      * @return string
