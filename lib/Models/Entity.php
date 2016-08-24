@@ -33,8 +33,8 @@ use \ArrayAccess;
 /**
  * Entity Class Doc Comment
  *
- * @category    Class
- * @description 
+ * @category    Class */
+/** 
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -143,12 +143,14 @@ class Entity implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = array();
-        if ($this->container['score'] > 1.0) {
+        if (!is_null($this->container['score']) && ($this->container['score'] > 1.0)) {
             $invalid_properties[] = "invalid value for 'score', must be smaller than or equal to 1.0.";
         }
-        if ($this->container['score'] < 0.0) {
+
+        if (!is_null($this->container['score']) && ($this->container['score'] < 0.0)) {
             $invalid_properties[] = "invalid value for 'score', must be bigger than or equal to 0.0.";
         }
+
         return $invalid_properties;
     }
 

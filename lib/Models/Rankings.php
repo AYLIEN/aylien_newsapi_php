@@ -1,6 +1,6 @@
 <?php
 /**
- * Location
+ * Rankings
  *
  * PHP version 5
  *
@@ -31,7 +31,7 @@ namespace Aylien\NewsApi\Models;
 use \ArrayAccess;
 
 /**
- * Location Class Doc Comment
+ * Rankings Class Doc Comment
  *
  * @category    Class */
 /** 
@@ -40,22 +40,20 @@ use \ArrayAccess;
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link        https://github.com/AYLIEN/aylien_newsapi_php
  */
-class Location implements ArrayAccess
+class Rankings implements ArrayAccess
 {
     /**
       * The original name of the model.
       * @var string
       */
-    protected static $apiModelName = 'Location';
+    protected static $apiModelName = 'Rankings';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
     protected static $apiTypes = array(
-        'country' => 'string',
-        'state' => 'string',
-        'city' => 'string'
+        'alexa' => '\Aylien\NewsApi\Models\Rank[]'
     );
 
     public static function apiTypes()
@@ -68,9 +66,7 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = array(
-        'country' => 'country',
-        'state' => 'state',
-        'city' => 'city'
+        'alexa' => 'alexa'
     );
 
     public static function attributeMap()
@@ -83,9 +79,7 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $setters = array(
-        'country' => 'setCountry',
-        'state' => 'setState',
-        'city' => 'setCity'
+        'alexa' => 'setAlexa'
     );
 
     public static function setters()
@@ -98,9 +92,7 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $getters = array(
-        'country' => 'getCountry',
-        'state' => 'getState',
-        'city' => 'getCity'
+        'alexa' => 'getAlexa'
     );
 
     public static function getters()
@@ -120,9 +112,7 @@ class Location implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['country'] = isset($data['country']) ? $data['country'] : null;
-        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
-        $this->container['city'] = isset($data['city']) ? $data['city'] : null;
+        $this->container['alexa'] = isset($data['alexa']) ? $data['alexa'] : null;
     }
 
     /**
@@ -149,64 +139,22 @@ class Location implements ArrayAccess
 
 
     /**
-     * Gets country
-     * @return string
+     * Gets alexa
+     * @return \Aylien\NewsApi\Models\Rank[]
      */
-    public function getCountry()
+    public function getAlexa()
     {
-        return $this->container['country'];
+        return $this->container['alexa'];
     }
 
     /**
-     * Sets country
-     * @param string $country The country code of the location. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
+     * Sets alexa
+     * @param \Aylien\NewsApi\Models\Rank[] $alexa
      * @return $this
      */
-    public function setCountry($country)
+    public function setAlexa($alexa)
     {
-        $this->container['country'] = $country;
-
-        return $this;
-    }
-
-    /**
-     * Gets state
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->container['state'];
-    }
-
-    /**
-     * Sets state
-     * @param string $state The state of the location
-     * @return $this
-     */
-    public function setState($state)
-    {
-        $this->container['state'] = $state;
-
-        return $this;
-    }
-
-    /**
-     * Gets city
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->container['city'];
-    }
-
-    /**
-     * Sets city
-     * @param string $city The city of the location
-     * @return $this
-     */
-    public function setCity($city)
-    {
-        $this->container['city'] = $city;
+        $this->container['alexa'] = $alexa;
 
         return $this;
     }

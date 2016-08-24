@@ -33,8 +33,8 @@ use \ArrayAccess;
 /**
  * Entities Class Doc Comment
  *
- * @category    Class
- * @description 
+ * @category    Class */
+/** 
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2

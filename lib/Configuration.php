@@ -103,7 +103,7 @@ class Configuration
      *
      * @var string
      */
-    protected $userAgent = "aylien-news-api/0.1.0/php";
+    protected $userAgent = "aylien-news-api/0.2.0/php";
 
     /**
      * Debug switch (default set to false)
@@ -509,7 +509,7 @@ class Configuration
         $report  = 'PHP SDK (Aylien\NewsApi) Debug Report:' . PHP_EOL;
         $report .= '    OS: ' . php_uname() . PHP_EOL;
         $report .= '    PHP Version: ' . phpversion() . PHP_EOL;
-        $report .= '    SDK Package Version: 0.1.0' . PHP_EOL;
+        $report .= '    SDK Package Version: 0.2.0' . PHP_EOL;
         $report .= '    Temp Folder Path: ' . self::getDefaultConfiguration()->getTempFolderPath() . PHP_EOL;
 
         return $report;

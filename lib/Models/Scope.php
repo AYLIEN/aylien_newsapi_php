@@ -33,8 +33,8 @@ use \ArrayAccess;
 /**
  * Scope Class Doc Comment
  *
- * @category    Class
- * @description 
+ * @category    Class */
+/** 
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -162,6 +162,7 @@ class Scope implements ArrayAccess
         if (!in_array($this->container['level'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'level', must be one of #{allowed_values}.";
         }
+
         return $invalid_properties;
     }
 

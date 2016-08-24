@@ -141,14 +141,14 @@ class DefaultApi
         if ($term === null) {
             throw new \InvalidArgumentException('Missing the required parameter $term when calling listAutocompletes');
         }
-        if (strlen($term) < 1) {
+        if ((strlen($term) < 1)) {
             throw new \InvalidArgumentException('invalid length for "$term" when calling DefaultApi.listAutocompletes, must be bigger than or equal to 1.');
         }
 
-        if ($per_page !== null && $per_page > 100.0) {
+        if (!is_null($per_page) && ($per_page > 100.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listAutocompletes, must be smaller than or equal to 100.0.');
         }
-        if ($per_page !== null && $per_page < 1.0) {
+        if (!is_null($per_page) && ($per_page < 1.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listAutocompletes, must be bigger than or equal to 1.0.');
         }
 
@@ -286,6 +286,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -349,6 +354,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -403,6 +413,11 @@ class DefaultApi
         $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
         $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
         $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
         $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
         $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
@@ -414,26 +429,42 @@ class DefaultApi
         $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
         }
 
-        if ($per_page !== null && $per_page > 100.0) {
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($per_page) && ($per_page > 100.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listCoverages, must be smaller than or equal to 100.0.');
         }
-        if ($per_page !== null && $per_page < 1.0) {
+        if (!is_null($per_page) && ($per_page < 1.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listCoverages, must be bigger than or equal to 1.0.');
         }
 
@@ -593,6 +624,26 @@ class DefaultApi
             $formParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_level);
         }
         // form params
+        if ($source_links_in_count_min !== null) {
+            $formParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toFormValue($source_links_in_count_min);
+        }
+        // form params
+        if ($source_links_in_count_max !== null) {
+            $formParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toFormValue($source_links_in_count_max);
+        }
+        // form params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $formParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_rank_min);
+        }
+        // form params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $formParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_rank_max);
+        }
+        // form params
+        if ($source_rankings_alexa_country !== null) {
+            $formParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_country);
+        }
+        // form params
         if ($cluster !== null) {
             $formParams['cluster'] = $this->apiClient->getSerializer()->toFormValue($cluster);
         }
@@ -735,6 +786,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
      *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
      *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
@@ -792,6 +848,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
      *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
      *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
@@ -803,8 +864,7 @@ class DefaultApi
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
     public function listHistogramsWithHttpInfo($opts = array())
-    {   
-    
+    {
         // define parameters
         $id = (!empty($opts['id']) ? $opts['id'] : null);
         $title = (!empty($opts['title']) ? $opts['title'] : null);
@@ -841,25 +901,46 @@ class DefaultApi
         $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
         $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
         $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
         $interval_start = (!empty($opts['interval_start']) ? $opts['interval_start'] : null);
         $interval_end = (!empty($opts['interval_end']) ? $opts['interval_end'] : null);
         $interval_width = (!empty($opts['interval_width']) ? $opts['interval_width'] : null);
         $field = (!empty($opts['field']) ? $opts['field'] : null);
         
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
         }
 
         // parse inputs
@@ -1078,6 +1159,29 @@ class DefaultApi
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
         }
         // query params
+        if ($source_links_in_count_min !== null) {
+            $queryParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_min);
+        }
+        // query params
+        if ($source_links_in_count_max !== null) {
+            $queryParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_max);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $queryParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_min);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $queryParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_max);
+        }
+        // query params
+        if (is_array($source_rankings_alexa_country)) {
+            $source_rankings_alexa_country = $this->apiClient->getSerializer()->serializeCollection($source_rankings_alexa_country, 'multi', true);
+        }
+        if ($source_rankings_alexa_country !== null) {
+            $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
+        }
+        // query params
         if ($interval_start !== null) {
             $queryParams['interval.start'] = $this->apiClient->getSerializer()->toQueryValue($interval_start);
         }
@@ -1199,6 +1303,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -1263,6 +1372,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -1281,26 +1395,94 @@ class DefaultApi
      */
     public function listRelatedStoriesWithHttpInfo($opts = array())
     {
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        // define parameters
+        $id = (!empty($opts['id']) ? $opts['id'] : null);
+        $title = (!empty($opts['title']) ? $opts['title'] : null);
+        $body = (!empty($opts['body']) ? $opts['body'] : null);
+        $text = (!empty($opts['text']) ? $opts['text'] : null);
+        $language = (!empty($opts['language']) ? $opts['language'] : null);
+        $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
+        $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
+        $categories_taxonomy = (!empty($opts['categories_taxonomy']) ? $opts['categories_taxonomy'] : null);
+        $categories_confident = (!empty($opts['categories_confident']) ? $opts['categories_confident'] : null);
+        $categories_id = (!empty($opts['categories_id']) ? $opts['categories_id'] : null);
+        $categories_level = (!empty($opts['categories_level']) ? $opts['categories_level'] : null);
+        $entities_title_text = (!empty($opts['entities_title_text']) ? $opts['entities_title_text'] : null);
+        $entities_title_type = (!empty($opts['entities_title_type']) ? $opts['entities_title_type'] : null);
+        $entities_title_links_dbpedia = (!empty($opts['entities_title_links_dbpedia']) ? $opts['entities_title_links_dbpedia'] : null);
+        $entities_body_text = (!empty($opts['entities_body_text']) ? $opts['entities_body_text'] : null);
+        $entities_body_type = (!empty($opts['entities_body_type']) ? $opts['entities_body_type'] : null);
+        $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
+        $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
+        $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
+        $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
+        $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
+        $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
+        $source_name = (!empty($opts['source_name']) ? $opts['source_name'] : null);
+        $source_domain = (!empty($opts['source_domain']) ? $opts['source_domain'] : null);
+        $source_locations_country = (!empty($opts['source_locations_country']) ? $opts['source_locations_country'] : null);
+        $source_locations_state = (!empty($opts['source_locations_state']) ? $opts['source_locations_state'] : null);
+        $source_locations_city = (!empty($opts['source_locations_city']) ? $opts['source_locations_city'] : null);
+        $source_scopes_country = (!empty($opts['source_scopes_country']) ? $opts['source_scopes_country'] : null);
+        $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
+        $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
+        $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
+        $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
+        $return = (!empty($opts['return']) ? $opts['return'] : null);
+        $story_id = (!empty($opts['story_id']) ? $opts['story_id'] : null);
+        $story_url = (!empty($opts['story_url']) ? $opts['story_url'] : null);
+        $story_title = (!empty($opts['story_title']) ? $opts['story_title'] : null);
+        $story_body = (!empty($opts['story_body']) ? $opts['story_body'] : null);
+        $boost_by = (!empty($opts['boost_by']) ? $opts['boost_by'] : null);
+        $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
+        $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
+        
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($per_page !== null && $per_page > 100.0) {
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($per_page) && ($per_page > 100.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listRelatedStories, must be smaller than or equal to 100.0.');
         }
-        if ($per_page !== null && $per_page < 1.0) {
+        if (!is_null($per_page) && ($per_page < 1.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 1.0.');
         }
 
@@ -1460,6 +1642,26 @@ class DefaultApi
             $formParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toFormValue($source_scopes_level);
         }
         // form params
+        if ($source_links_in_count_min !== null) {
+            $formParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toFormValue($source_links_in_count_min);
+        }
+        // form params
+        if ($source_links_in_count_max !== null) {
+            $formParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toFormValue($source_links_in_count_max);
+        }
+        // form params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $formParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_rank_min);
+        }
+        // form params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $formParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_rank_max);
+        }
+        // form params
+        if ($source_rankings_alexa_country !== null) {
+            $formParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_country);
+        }
+        // form params
         if ($cluster !== null) {
             $formParams['cluster'] = $this->apiClient->getSerializer()->toFormValue($cluster);
         }
@@ -1602,6 +1804,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -1663,6 +1870,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
      *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
      *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
@@ -1676,7 +1888,7 @@ class DefaultApi
      * @return Array of \Aylien\NewsApi\Models\Stories, HTTP status code, HTTP response headers (array of strings)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
      */
-    public function listStoriesWithHttpInfo($opts)
+    public function listStoriesWithHttpInfo($opts = array())
     {
         // define parameters
         $id = (!empty($opts['id']) ? $opts['id'] : null);
@@ -1714,6 +1926,11 @@ class DefaultApi
         $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
         $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
         $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
         $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
         $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
@@ -1722,26 +1939,42 @@ class DefaultApi
         $cursor = (!empty($opts['cursor']) ? $opts['cursor'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
         }
 
-        if ($per_page !== null && $per_page > 100.0) {
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($per_page) && ($per_page > 100.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listStories, must be smaller than or equal to 100.0.');
         }
-        if ($per_page !== null && $per_page < 1.0) {
+        if (!is_null($per_page) && ($per_page < 1.0)) {
             throw new \InvalidArgumentException('invalid value for "$per_page" when calling DefaultApi.listStories, must be bigger than or equal to 1.0.');
         }
 
@@ -1961,6 +2194,29 @@ class DefaultApi
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
         }
         // query params
+        if ($source_links_in_count_min !== null) {
+            $queryParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_min);
+        }
+        // query params
+        if ($source_links_in_count_max !== null) {
+            $queryParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_max);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $queryParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_min);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $queryParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_max);
+        }
+        // query params
+        if (is_array($source_rankings_alexa_country)) {
+            $source_rankings_alexa_country = $this->apiClient->getSerializer()->serializeCollection($source_rankings_alexa_country, 'multi', true);
+        }
+        if ($source_rankings_alexa_country !== null) {
+            $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
+        }
+        // query params
         if ($cluster !== null) {
             $queryParams['cluster'] = $this->apiClient->getSerializer()->toQueryValue($cluster);
         }
@@ -2095,6 +2351,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
      *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
      *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
@@ -2150,6 +2411,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
      *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
      *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
@@ -2195,24 +2461,45 @@ class DefaultApi
         $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
         $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
         $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
         $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
         $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
         $period = (!empty($opts['period']) ? $opts['period'] : null);
         
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
         }
 
         // parse inputs
@@ -2423,6 +2710,29 @@ class DefaultApi
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
         }
         // query params
+        if ($source_links_in_count_min !== null) {
+            $queryParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_min);
+        }
+        // query params
+        if ($source_links_in_count_max !== null) {
+            $queryParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_max);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $queryParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_min);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $queryParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_max);
+        }
+        // query params
+        if (is_array($source_rankings_alexa_country)) {
+            $source_rankings_alexa_country = $this->apiClient->getSerializer()->serializeCollection($source_rankings_alexa_country, 'multi', true);
+        }
+        if ($source_rankings_alexa_country !== null) {
+            $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
+        }
+        // query params
         if ($published_at_start !== null) {
             $queryParams['published_at.start'] = $this->apiClient->getSerializer()->toQueryValue($published_at_start);
         }
@@ -2540,6 +2850,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
      * </ul>
      *
@@ -2595,6 +2910,11 @@ class DefaultApi
      *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
      *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
+     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
+     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
      *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
      * </ul>
      *
@@ -2604,20 +2924,79 @@ class DefaultApi
      */
     public function listTrendsWithHttpInfo($opts = array())
     {
-        if ($media_images_count_min !== null && $media_images_count_min < 0.0) {
+        // define parameters
+        $id = (!empty($opts['id']) ? $opts['id'] : null);
+        $title = (!empty($opts['title']) ? $opts['title'] : null);
+        $body = (!empty($opts['body']) ? $opts['body'] : null);
+        $text = (!empty($opts['text']) ? $opts['text'] : null);
+        $language = (!empty($opts['language']) ? $opts['language'] : null);
+        $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
+        $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
+        $categories_taxonomy = (!empty($opts['categories_taxonomy']) ? $opts['categories_taxonomy'] : null);
+        $categories_confident = (!empty($opts['categories_confident']) ? $opts['categories_confident'] : null);
+        $categories_id = (!empty($opts['categories_id']) ? $opts['categories_id'] : null);
+        $categories_level = (!empty($opts['categories_level']) ? $opts['categories_level'] : null);
+        $entities_title_text = (!empty($opts['entities_title_text']) ? $opts['entities_title_text'] : null);
+        $entities_title_type = (!empty($opts['entities_title_type']) ? $opts['entities_title_type'] : null);
+        $entities_title_links_dbpedia = (!empty($opts['entities_title_links_dbpedia']) ? $opts['entities_title_links_dbpedia'] : null);
+        $entities_body_text = (!empty($opts['entities_body_text']) ? $opts['entities_body_text'] : null);
+        $entities_body_type = (!empty($opts['entities_body_type']) ? $opts['entities_body_type'] : null);
+        $entities_body_links_dbpedia = (!empty($opts['entities_body_links_dbpedia']) ? $opts['entities_body_links_dbpedia'] : null);
+        $sentiment_title_polarity = (!empty($opts['sentiment_title_polarity']) ? $opts['sentiment_title_polarity'] : null);
+        $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
+        $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
+        $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
+        $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
+        $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
+        $author_name = (!empty($opts['author_name']) ? $opts['author_name'] : null);
+        $source_id = (!empty($opts['source_id']) ? $opts['source_id'] : null);
+        $source_name = (!empty($opts['source_name']) ? $opts['source_name'] : null);
+        $source_domain = (!empty($opts['source_domain']) ? $opts['source_domain'] : null);
+        $source_locations_country = (!empty($opts['source_locations_country']) ? $opts['source_locations_country'] : null);
+        $source_locations_state = (!empty($opts['source_locations_state']) ? $opts['source_locations_state'] : null);
+        $source_locations_city = (!empty($opts['source_locations_city']) ? $opts['source_locations_city'] : null);
+        $source_scopes_country = (!empty($opts['source_scopes_country']) ? $opts['source_scopes_country'] : null);
+        $source_scopes_state = (!empty($opts['source_scopes_state']) ? $opts['source_scopes_state'] : null);
+        $source_scopes_city = (!empty($opts['source_scopes_city']) ? $opts['source_scopes_city'] : null);
+        $source_scopes_level = (!empty($opts['source_scopes_level']) ? $opts['source_scopes_level'] : null);
+        $source_links_in_count_min = (!empty($opts['source_links_in_count_min']) ? $opts['source_links_in_count_min'] : null);
+        $source_links_in_count_max = (!empty($opts['source_links_in_count_max']) ? $opts['source_links_in_count_max'] : null);
+        $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
+        $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
+        $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $field = (!empty($opts['field']) ? $opts['field'] : null);
+        
+        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_images_count_max !== null && $media_images_count_max < 0.0) {
+        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_min !== null && $media_videos_count_min < 0.0) {
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
         }
 
-        if ($media_videos_count_max !== null && $media_videos_count_max < 0.0) {
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
             throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
         }
 
         // parse inputs
@@ -2834,6 +3213,29 @@ class DefaultApi
         }
         if ($source_scopes_level !== null) {
             $queryParams['source.scopes.level[]'] = $this->apiClient->getSerializer()->toQueryValue($source_scopes_level);
+        }
+        // query params
+        if ($source_links_in_count_min !== null) {
+            $queryParams['source.links_in_count.min'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_min);
+        }
+        // query params
+        if ($source_links_in_count_max !== null) {
+            $queryParams['source.links_in_count.max'] = $this->apiClient->getSerializer()->toQueryValue($source_links_in_count_max);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_min !== null) {
+            $queryParams['source.rankings.alexa.rank.min'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_min);
+        }
+        // query params
+        if ($source_rankings_alexa_rank_max !== null) {
+            $queryParams['source.rankings.alexa.rank.max'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_rank_max);
+        }
+        // query params
+        if (is_array($source_rankings_alexa_country)) {
+            $source_rankings_alexa_country = $this->apiClient->getSerializer()->serializeCollection($source_rankings_alexa_country, 'multi', true);
+        }
+        if ($source_rankings_alexa_country !== null) {
+            $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
         }
         // query params
         if ($field !== null) {

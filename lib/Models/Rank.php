@@ -1,6 +1,6 @@
 <?php
 /**
- * Location
+ * Rank
  *
  * PHP version 5
  *
@@ -31,7 +31,7 @@ namespace Aylien\NewsApi\Models;
 use \ArrayAccess;
 
 /**
- * Location Class Doc Comment
+ * Rank Class Doc Comment
  *
  * @category    Class */
 /** 
@@ -40,22 +40,22 @@ use \ArrayAccess;
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link        https://github.com/AYLIEN/aylien_newsapi_php
  */
-class Location implements ArrayAccess
+class Rank implements ArrayAccess
 {
     /**
       * The original name of the model.
       * @var string
       */
-    protected static $apiModelName = 'Location';
+    protected static $apiModelName = 'Rank';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
     protected static $apiTypes = array(
+        'rank' => 'int',
         'country' => 'string',
-        'state' => 'string',
-        'city' => 'string'
+        'fetched_at' => '\DateTime'
     );
 
     public static function apiTypes()
@@ -68,9 +68,9 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = array(
+        'rank' => 'rank',
         'country' => 'country',
-        'state' => 'state',
-        'city' => 'city'
+        'fetched_at' => 'fetched_at'
     );
 
     public static function attributeMap()
@@ -83,9 +83,9 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $setters = array(
+        'rank' => 'setRank',
         'country' => 'setCountry',
-        'state' => 'setState',
-        'city' => 'setCity'
+        'fetched_at' => 'setFetchedAt'
     );
 
     public static function setters()
@@ -98,9 +98,9 @@ class Location implements ArrayAccess
      * @var string[]
      */
     protected static $getters = array(
+        'rank' => 'getRank',
         'country' => 'getCountry',
-        'state' => 'getState',
-        'city' => 'getCity'
+        'fetched_at' => 'getFetchedAt'
     );
 
     public static function getters()
@@ -120,9 +120,9 @@ class Location implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
+        $this->container['rank'] = isset($data['rank']) ? $data['rank'] : null;
         $this->container['country'] = isset($data['country']) ? $data['country'] : null;
-        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
-        $this->container['city'] = isset($data['city']) ? $data['city'] : null;
+        $this->container['fetched_at'] = isset($data['fetched_at']) ? $data['fetched_at'] : null;
     }
 
     /**
@@ -149,6 +149,27 @@ class Location implements ArrayAccess
 
 
     /**
+     * Gets rank
+     * @return int
+     */
+    public function getRank()
+    {
+        return $this->container['rank'];
+    }
+
+    /**
+     * Sets rank
+     * @param int $rank The rank
+     * @return $this
+     */
+    public function setRank($rank)
+    {
+        $this->container['rank'] = $rank;
+
+        return $this;
+    }
+
+    /**
      * Gets country
      * @return string
      */
@@ -159,7 +180,7 @@ class Location implements ArrayAccess
 
     /**
      * Sets country
-     * @param string $country The country code of the location. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.
+     * @param string $country The country code which the rank is in it
      * @return $this
      */
     public function setCountry($country)
@@ -170,43 +191,22 @@ class Location implements ArrayAccess
     }
 
     /**
-     * Gets state
-     * @return string
+     * Gets fetched_at
+     * @return \DateTime
      */
-    public function getState()
+    public function getFetchedAt()
     {
-        return $this->container['state'];
+        return $this->container['fetched_at'];
     }
 
     /**
-     * Sets state
-     * @param string $state The state of the location
+     * Sets fetched_at
+     * @param \DateTime $fetched_at The fetched date of the rank
      * @return $this
      */
-    public function setState($state)
+    public function setFetchedAt($fetched_at)
     {
-        $this->container['state'] = $state;
-
-        return $this;
-    }
-
-    /**
-     * Gets city
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->container['city'];
-    }
-
-    /**
-     * Sets city
-     * @param string $city The city of the location
-     * @return $this
-     */
-    public function setCity($city)
-    {
-        $this->container['city'] = $city;
+        $this->container['fetched_at'] = $fetched_at;
 
         return $this;
     }

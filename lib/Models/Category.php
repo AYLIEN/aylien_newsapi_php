@@ -33,8 +33,8 @@ use \ArrayAccess;
 /**
  * Category Class Doc Comment
  *
- * @category    Class
- * @description 
+ * @category    Class */
+/** 
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -168,6 +168,7 @@ class Category implements ArrayAccess
         if (!in_array($this->container['taxonomy'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'taxonomy', must be one of #{allowed_values}.";
         }
+
         return $invalid_properties;
     }
 

@@ -33,8 +33,8 @@ use \ArrayAccess;
 /**
  * Media Class Doc Comment
  *
- * @category    Class
- * @description 
+ * @category    Class */
+/** 
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -150,6 +150,7 @@ class Media implements ArrayAccess
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
+
         return $invalid_properties;
     }
 

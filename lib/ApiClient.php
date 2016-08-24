@@ -221,7 +221,7 @@ class ApiClient
         // Make the request
         $response = curl_exec($curl);
         $http_header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $http_header = $this->http_parse_headers(substr($response, 0, $http_header_size));
+        $http_header = $this->httpParseHeaders(substr($response, 0, $http_header_size));
         $http_body = substr($response, $http_header_size);
         $response_info = curl_getinfo($curl);
 
@@ -314,7 +314,7 @@ class ApiClient
     *
     * @return string[] Array of HTTP response heaers
     */
-    protected function http_parse_headers($raw_headers)
+    protected function httpParseHeaders($raw_headers)
     {
         // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
         $headers = array();
