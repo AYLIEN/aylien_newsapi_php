@@ -7,7 +7,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -35,11 +35,10 @@ namespace Aylien\NewsApi;
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 class Configuration
 {
-
     private static $defaultConfiguration = null;
 
     /**
@@ -47,14 +46,14 @@ class Configuration
      *
      * @var string[]
      */
-    protected $apiKeys = array();
+    protected $apiKeys = [];
 
     /**
      * Associate array to store API prefix (e.g. Bearer)
      *
      * @var string[]
      */
-    protected $apiKeyPrefixes = array();
+    protected $apiKeyPrefixes = [];
 
     /**
      * Access token for OAuth
@@ -78,11 +77,11 @@ class Configuration
     protected $password = '';
 
     /**
-     * The default instance of ApiClient
+     * The default header(s)
      *
-     * @var \Aylien\NewsApi\ApiClient
+     * @var array
      */
-    protected $defaultHeaders = array();
+    protected $defaultHeaders = [];
 
     /**
      * The host
@@ -99,11 +98,11 @@ class Configuration
     protected $curlTimeout = 0;
 
     /**
-     * User agent of the HTTP request, set to "aylien-news-api/0.1.0/php" by default
+     * User agent of the HTTP request, set to "aylien-news-api/0.3.0/php" by default
      *
      * @var string
      */
-    protected $userAgent = "aylien-news-api/0.2.0/php";
+    protected $userAgent = "aylien-news-api/0.3.0/php";
 
     /**
      * Debug switch (default set to false)
@@ -270,7 +269,7 @@ class Configuration
      * @param string $headerName  header name (e.g. Token)
      * @param string $headerValue header value (e.g. 1z8wp3)
      *
-     * @return ApiClient
+     * @return Configuration
      */
     public function addDefaultHeader($headerName, $headerValue)
     {
@@ -332,7 +331,7 @@ class Configuration
      *
      * @param string $userAgent the user agent of the api client
      *
-     * @return ApiClient
+     * @return Configuration
      */
     public function setUserAgent($userAgent)
     {
@@ -359,7 +358,7 @@ class Configuration
      *
      * @param integer $seconds Number of seconds before timing out [set to 0 for no timeout]
      *
-     * @return ApiClient
+     * @return Configuration
      */
     public function setCurlTimeout($seconds)
     {
@@ -480,7 +479,7 @@ class Configuration
      */
     public static function getDefaultConfiguration()
     {
-        if (self::$defaultConfiguration == null) {
+        if (self::$defaultConfiguration === null) {
             self::$defaultConfiguration = new Configuration();
         }
 
@@ -509,7 +508,8 @@ class Configuration
         $report  = 'PHP SDK (Aylien\NewsApi) Debug Report:' . PHP_EOL;
         $report .= '    OS: ' . php_uname() . PHP_EOL;
         $report .= '    PHP Version: ' . phpversion() . PHP_EOL;
-        $report .= '    SDK Package Version: 0.2.0' . PHP_EOL;
+        $report .= '    OpenAPI Spec Version: 1.0' . PHP_EOL;
+        $report .= '    SDK Package Version: 0.3.0' . PHP_EOL;
         $report .= '    Temp Folder Path: ' . self::getDefaultConfiguration()->getTempFolderPath() . PHP_EOL;
 
         return $report;

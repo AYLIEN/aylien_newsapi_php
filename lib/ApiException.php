@@ -7,7 +7,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -36,7 +36,7 @@ use \Exception;
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 class ApiException extends Exception
 {

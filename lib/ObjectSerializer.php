@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -35,17 +35,16 @@ namespace Aylien\NewsApi;
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 class ObjectSerializer
 {
-
     /**
      * Serialize data
      *
      * @param mixed $data the data to serialize
      *
-     * @return string serialized form of $data
+     * @return string|object serialized form of $data
      */
     public static function sanitizeForSerialization($data)
     {
@@ -59,7 +58,7 @@ class ObjectSerializer
             }
             return $data;
         } elseif (is_object($data)) {
-            $values = array();
+            $values = [];
             foreach (array_keys($data::apiTypes()) as $property) {
                 $getter = $data::getters()[$property];
                 if ($data->$getter() !== null) {
@@ -108,7 +107,7 @@ class ObjectSerializer
      * If it's a string, pass through unchanged. It will be url-encoded
      * later.
      *
-     * @param object $object an object to be serialized to a string
+     * @param string[]|string|\DateTime $object an object to be serialized to a string
      *
      * @return string the serialized object
      */
@@ -140,7 +139,7 @@ class ObjectSerializer
      * the http body (form parameter). If it's a string, pass through unchanged
      * If it's a datetime object, format it in ISO8601
      *
-     * @param string $value the value of the form parameter
+     * @param string|\SplFileObject $value the value of the form parameter
      *
      * @return string the form string
      */
@@ -158,7 +157,7 @@ class ObjectSerializer
      * the parameter. If it's a string, pass through unchanged
      * If it's a datetime object, format it in ISO8601
      *
-     * @param string $value the value of the parameter
+     * @param string|\DateTime $value the value of the parameter
      *
      * @return string the header string
      */
@@ -174,9 +173,10 @@ class ObjectSerializer
     /**
      * Serialize an array to a string.
      *
-     * @param array  $collection       collection to serialize to a string
-     * @param string $collectionFormat the format use for serialization (csv,
+     * @param array  $collection                 collection to serialize to a string
+     * @param string $collectionFormat           the format use for serialization (csv,
      * ssv, tsv, pipes, multi)
+     * @param bool   $allowCollectionFormatMulti allow collection format to be a multidimensional array
      *
      * @return string
      */
@@ -207,12 +207,12 @@ class ObjectSerializer
     /**
      * Deserialize a JSON string into an object
      *
-     * @param mixed  $data          object or primitive to be deserialized
-     * @param string $class         class name is passed as a string
-     * @param string $httpHeaders   HTTP headers
-     * @param string $discriminator discriminator if polymorphism is used
+     * @param mixed    $data          object or primitive to be deserialized
+     * @param string   $class         class name is passed as a string
+     * @param string[] $httpHeaders   HTTP headers
+     * @param string   $discriminator discriminator if polymorphism is used
      *
-     * @return object an instance of $class
+     * @return object|array|null an single or an array of $class instances
      */
     public static function deserialize($data, $class, $httpHeaders = null, $discriminator = null)
     {
@@ -220,7 +220,7 @@ class ObjectSerializer
             return null;
         } elseif (substr($class, 0, 4) === 'map[') { // for associative array e.g. map[string,int]
             $inner = substr($class, 4, -1);
-            $deserialized = array();
+            $deserialized = [];
             if (strrpos($inner, ",") !== false) {
                 $subClass_array = explode(',', $inner, 2);
                 $subClass = $subClass_array[1];
@@ -229,9 +229,9 @@ class ObjectSerializer
                 }
             }
             return $deserialized;
-        } elseif (strcasecmp(substr($class, -2), '[]') == 0) {
+        } elseif (strcasecmp(substr($class, -2), '[]') === 0) {
             $subClass = substr($class, 0, -2);
-            $values = array();
+            $values = [];
             foreach ($data as $key => $value) {
                 $values[] = self::deserialize($value, $subClass, null, $discriminator);
             }
@@ -251,7 +251,7 @@ class ObjectSerializer
             } else {
                 return null;
             }
-        } elseif (in_array($class, array('void', 'bool', 'string', 'double', 'byte', 'mixed', 'integer', 'float', 'int', 'DateTime', 'number', 'boolean', 'object'))) {
+        } elseif (in_array($class, ['DateTime', 'bool', 'boolean', 'byte', 'double', 'float', 'int', 'integer', 'mixed', 'number', 'object', 'string', 'void'], true)) {
             settype($data, $class);
             return $data;
         } elseif ($class === '\SplFileObject') {
@@ -264,7 +264,6 @@ class ObjectSerializer
             }
             $deserialized = new \SplFileObject($filename, "w");
             $byte_written = $deserialized->fwrite($data);
- 
             if (Configuration::getDefaultConfiguration()->getDebug()) {
                 error_log("[DEBUG] Written $byte_written byte to $filename. Please move the file to a proper folder or delete the temp file after processing.".PHP_EOL, 3, Configuration::getDefaultConfiguration()->getDebugFile());
             }

@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -35,11 +35,10 @@ namespace Aylien\NewsApi;
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 class ApiClient
 {
-
     public static $PATCH = "PATCH";
     public static $POST = "POST";
     public static $GET = "GET";
@@ -69,7 +68,7 @@ class ApiClient
      */
     public function __construct(\Aylien\NewsApi\Configuration $config = null)
     {
-        if ($config == null) {
+        if ($config === null) {
             $config = Configuration::getDefaultConfiguration();
         }
 
@@ -138,8 +137,7 @@ class ApiClient
      */
     public function callApi($resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null)
     {
-
-        $headers = array();
+        $headers = [];
 
         // construct the http header
         $headerParams = array_merge(
@@ -152,9 +150,9 @@ class ApiClient
         }
 
         // form data
-        if ($postData and in_array('Content-Type: application/x-www-form-urlencoded', $headers)) {
-            $postData = preg_replace("/%5B[0-9]+%5D=/i", "=", http_build_query($postData));
-        } elseif ((is_object($postData) or is_array($postData)) and !in_array('Content-Type: multipart/form-data', $headers)) { // json model
+        if ($postData and in_array('Content-Type: application/x-www-form-urlencoded', $headers, true)) {
+            $postData = http_build_query($postData);
+        } elseif ((is_object($postData) or is_array($postData)) and !in_array('Content-Type: multipart/form-data', $headers, true)) { // json model
             $postData = json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($postData));
         }
 
@@ -162,7 +160,7 @@ class ApiClient
 
         $curl = curl_init();
         // set timeout, if needed
-        if ($this->config->getCurlTimeout() != 0) {
+        if ($this->config->getCurlTimeout() !== 0) {
             curl_setopt($curl, CURLOPT_TIMEOUT, $this->config->getCurlTimeout());
         }
         // return the result on success, rather than just true
@@ -171,7 +169,7 @@ class ApiClient
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         // disable SSL verification, if needed
-        if ($this->config->getSSLVerification() == false) {
+        if ($this->config->getSSLVerification() === false) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         }
@@ -180,24 +178,24 @@ class ApiClient
             $url = ($url . '?' . preg_replace("/%5B[0-9]+%5D=/i", "=", http_build_query($queryParams)));
         }
 
-        if ($method == self::$POST) {
+        if ($method === self::$POST) {
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-        } elseif ($method == self::$HEAD) {
+        } elseif ($method === self::$HEAD) {
             curl_setopt($curl, CURLOPT_NOBODY, true);
-        } elseif ($method == self::$OPTIONS) {
+        } elseif ($method === self::$OPTIONS) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-        } elseif ($method == self::$PATCH) {
+        } elseif ($method === self::$PATCH) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PATCH");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-        } elseif ($method == self::$PUT) {
+        } elseif ($method === self::$PUT) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-        } elseif ($method == self::$DELETE) {
+        } elseif ($method === self::$DELETE) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-        } elseif ($method != self::$GET) {
+        } elseif ($method !== self::$GET) {
             throw new ApiException('Method ' . $method . ' is not recognized.');
         }
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -231,7 +229,7 @@ class ApiClient
         }
 
         // Handle the response
-        if ($response_info['http_code'] == 0) {
+        if ($response_info['http_code'] === 0) {
             $curl_error_message = curl_error($curl);
 
             // curl_exec can sometimes fail but still return a blank message from curl_error().
@@ -247,8 +245,8 @@ class ApiClient
             throw $exception;
         } elseif ($response_info['http_code'] >= 200 && $response_info['http_code'] <= 299) {
             // return raw body if response is a file
-            if ($responseType == '\SplFileObject' || $responseType == 'string') {
-                return array($http_body, $response_info['http_code'], $http_header);
+            if ($responseType === '\SplFileObject' || $responseType === 'string') {
+                return [$http_body, $response_info['http_code'], $http_header];
             }
 
             $data = json_decode($http_body);
@@ -268,7 +266,7 @@ class ApiClient
                 $data
             );
         }
-        return array($data, $response_info['http_code'], $http_header);
+        return [$data, $response_info['http_code'], $http_header];
     }
 
     /**
@@ -317,7 +315,7 @@ class ApiClient
     protected function httpParseHeaders($raw_headers)
     {
         // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
-        $headers = array();
+        $headers = [];
         $key = '';
 
         foreach (explode("\n", $raw_headers) as $h) {
@@ -327,14 +325,14 @@ class ApiClient
                 if (!isset($headers[$h[0]])) {
                     $headers[$h[0]] = trim($h[1]);
                 } elseif (is_array($headers[$h[0]])) {
-                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+                    $headers[$h[0]] = array_merge($headers[$h[0]], [trim($h[1])]);
                 } else {
-                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+                    $headers[$h[0]] = array_merge([$headers[$h[0]]], [trim($h[1])]);
                 }
 
                 $key = $h[0];
             } else {
-                if (substr($h[0], 0, 1) == "\t") {
+                if (substr($h[0], 0, 1) === "\t") {
                     $headers[$key] .= "\r\n\t".trim($h[0]);
                 } elseif (!$key) {
                     $headers[0] = trim($h[0]);

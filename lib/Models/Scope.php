@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -38,7 +38,7 @@ use \ArrayAccess;
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link        https://github.com/AYLIEN/aylien_newsapi_php
+ * @link        https://newsapi.aylien.com/
  */
 class Scope implements ArrayAccess
 {
@@ -52,12 +52,12 @@ class Scope implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $apiTypes = array(
+    protected static $apiTypes = [
         'country' => 'string',
         'state' => 'string',
         'city' => 'string',
         'level' => 'string'
-    );
+    ];
 
     public static function apiTypes()
     {
@@ -68,44 +68,46 @@ class Scope implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
+    protected static $attributeMap = [
         'country' => 'country',
         'state' => 'state',
         'city' => 'city',
         'level' => 'level'
-    );
+    ];
+
+
+    /**
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = [
+        'country' => 'setCountry',
+        'state' => 'setState',
+        'city' => 'setCity',
+        'level' => 'setLevel'
+    ];
+
+
+    /**
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = [
+        'country' => 'getCountry',
+        'state' => 'getState',
+        'city' => 'getCity',
+        'level' => 'getLevel'
+    ];
 
     public static function attributeMap()
     {
         return self::$attributeMap;
     }
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     * @var string[]
-     */
-    protected static $setters = array(
-        'country' => 'setCountry',
-        'state' => 'setState',
-        'city' => 'setCity',
-        'level' => 'setLevel'
-    );
-
     public static function setters()
     {
         return self::$setters;
     }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     * @var string[]
-     */
-    protected static $getters = array(
-        'country' => 'getCountry',
-        'state' => 'getState',
-        'city' => 'getCity',
-        'level' => 'getLevel'
-    );
 
     public static function getters()
     {
@@ -136,11 +138,11 @@ class Scope implements ArrayAccess
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
@@ -157,8 +159,8 @@ class Scope implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
-        $allowed_values = array("international", "national", "local");
+        $invalid_properties = [];
+        $allowed_values = ["international", "national", "local"];
         if (!in_array($this->container['level'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'level', must be one of #{allowed_values}.";
         }
@@ -174,7 +176,7 @@ class Scope implements ArrayAccess
      */
     public function valid()
     {
-        $allowed_values = array("international", "national", "local");
+        $allowed_values = ["international", "national", "local"];
         if (!in_array($this->container['level'], $allowed_values)) {
             return false;
         }
@@ -262,7 +264,7 @@ class Scope implements ArrayAccess
     public function setLevel($level)
     {
         $allowed_values = array('international', 'national', 'local');
-        if (!in_array($level, $allowed_values)) {
+        if (!is_null($level) && (!in_array($level, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'level', must be one of 'international', 'national', 'local'");
         }
         $this->container['level'] = $level;

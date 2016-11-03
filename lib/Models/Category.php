@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -38,7 +38,7 @@ use \ArrayAccess;
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link        https://github.com/AYLIEN/aylien_newsapi_php
+ * @link        https://newsapi.aylien.com/
  */
 class Category implements ArrayAccess
 {
@@ -52,14 +52,14 @@ class Category implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $apiTypes = array(
+    protected static $apiTypes = [
         'id' => 'string',
         'taxonomy' => 'string',
         'level' => 'int',
         'score' => 'double',
         'confident' => 'bool',
         'links' => '\Aylien\NewsApi\Models\CategoryLinks'
-    );
+    ];
 
     public static function apiTypes()
     {
@@ -70,50 +70,52 @@ class Category implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
+    protected static $attributeMap = [
         'id' => 'id',
         'taxonomy' => 'taxonomy',
         'level' => 'level',
         'score' => 'score',
         'confident' => 'confident',
         'links' => 'links'
-    );
+    ];
 
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
      */
-    protected static $setters = array(
+    protected static $setters = [
         'id' => 'setId',
         'taxonomy' => 'setTaxonomy',
         'level' => 'setLevel',
         'score' => 'setScore',
         'confident' => 'setConfident',
         'links' => 'setLinks'
-    );
+    ];
 
-    public static function setters()
-    {
-        return self::$setters;
-    }
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
      * @var string[]
      */
-    protected static $getters = array(
+    protected static $getters = [
         'id' => 'getId',
         'taxonomy' => 'getTaxonomy',
         'level' => 'getLevel',
         'score' => 'getScore',
         'confident' => 'getConfident',
         'links' => 'getLinks'
-    );
+    ];
+
+    public static function attributeMap()
+    {
+        return self::$attributeMap;
+    }
+
+    public static function setters()
+    {
+        return self::$setters;
+    }
 
     public static function getters()
     {
@@ -122,6 +124,8 @@ class Category implements ArrayAccess
 
     const TAXONOMY_IAB_QAG = 'iab-qag';
     const TAXONOMY_IPTC_SUBJECTCODE = 'iptc-subjectcode';
+    
+
     
     /**
      * Gets allowable values of the enum
@@ -140,11 +144,11 @@ class Category implements ArrayAccess
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
@@ -163,8 +167,8 @@ class Category implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
-        $allowed_values = array("iab-qag", "iptc-subjectcode");
+        $invalid_properties = [];
+        $allowed_values = ["iab-qag", "iptc-subjectcode"];
         if (!in_array($this->container['taxonomy'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'taxonomy', must be one of #{allowed_values}.";
         }
@@ -180,7 +184,7 @@ class Category implements ArrayAccess
      */
     public function valid()
     {
-        $allowed_values = array("iab-qag", "iptc-subjectcode");
+        $allowed_values = ["iab-qag", "iptc-subjectcode"];
         if (!in_array($this->container['taxonomy'], $allowed_values)) {
             return false;
         }
@@ -226,7 +230,7 @@ class Category implements ArrayAccess
     public function setTaxonomy($taxonomy)
     {
         $allowed_values = array('iab-qag', 'iptc-subjectcode');
-        if (!in_array($taxonomy, $allowed_values)) {
+        if (!is_null($taxonomy) && (!in_array($taxonomy, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'taxonomy', must be one of 'iab-qag', 'iptc-subjectcode'");
         }
         $this->container['taxonomy'] = $taxonomy;

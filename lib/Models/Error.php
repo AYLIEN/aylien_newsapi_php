@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -38,7 +38,7 @@ use \ArrayAccess;
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link        https://github.com/AYLIEN/aylien_newsapi_php
+ * @link        https://newsapi.aylien.com/
  */
 class Error implements ArrayAccess
 {
@@ -52,14 +52,14 @@ class Error implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $apiTypes = array(
+    protected static $apiTypes = [
         'id' => 'string',
         'links' => '\Aylien\NewsApi\Models\ErrorLinks',
         'status' => 'string',
         'code' => 'string',
         'title' => 'string',
         'detail' => 'string'
-    );
+    ];
 
     public static function apiTypes()
     {
@@ -70,65 +70,71 @@ class Error implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
+    protected static $attributeMap = [
         'id' => 'id',
         'links' => 'links',
         'status' => 'status',
         'code' => 'code',
         'title' => 'title',
         'detail' => 'detail'
-    );
+    ];
 
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
      */
-    protected static $setters = array(
+    protected static $setters = [
         'id' => 'setId',
         'links' => 'setLinks',
         'status' => 'setStatus',
         'code' => 'setCode',
         'title' => 'setTitle',
         'detail' => 'setDetail'
-    );
+    ];
 
-    public static function setters()
-    {
-        return self::$setters;
-    }
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
      * @var string[]
      */
-    protected static $getters = array(
+    protected static $getters = [
         'id' => 'getId',
         'links' => 'getLinks',
         'status' => 'getStatus',
         'code' => 'getCode',
         'title' => 'getTitle',
         'detail' => 'getDetail'
-    );
+    ];
+
+    public static function attributeMap()
+    {
+        return self::$attributeMap;
+    }
+
+    public static function setters()
+    {
+        return self::$setters;
+    }
 
     public static function getters()
     {
         return self::$getters;
     }
 
+    
+
+    
+
     /**
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
@@ -147,7 +153,7 @@ class Error implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
+        $invalid_properties = [];
         return $invalid_properties;
     }
 

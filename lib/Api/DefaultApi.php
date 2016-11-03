@@ -7,7 +7,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -27,9 +27,9 @@
 
 namespace Aylien\NewsApi\Api;
 
-use \Aylien\NewsApi\Configuration;
 use \Aylien\NewsApi\ApiClient;
 use \Aylien\NewsApi\ApiException;
+use \Aylien\NewsApi\Configuration;
 use \Aylien\NewsApi\ObjectSerializer;
 
 /**
@@ -39,11 +39,10 @@ use \Aylien\NewsApi\ObjectSerializer;
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 class DefaultApi
 {
-
     /**
      * API Client
      *
@@ -58,7 +57,7 @@ class DefaultApi
      */
     public function __construct(\Aylien\NewsApi\ApiClient $apiClient = null)
     {
-        if ($apiClient == null) {
+        if ($apiClient === null) {
             $apiClient = new ApiClient();
             $apiClient->getConfig()->setHost('https://api.newsapi.aylien.com/api/v1');
         }
@@ -155,14 +154,14 @@ class DefaultApi
         // parse inputs
         $resourcePath = "/autocompletes";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // query params
         if ($type !== null) {
@@ -212,7 +211,7 @@ class DefaultApi
                 '/autocompletes'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Autocompletes', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Autocompletes', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -250,62 +249,73 @@ class DefaultApi
      *
      * List coverages
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
-     *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
-     *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
-     *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return \Aylien\NewsApi\Models\Coverages
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param int $story_id A story id (optional)
+     * @param string $story_url An article or webpage (optional)
+     * @param string $story_title Title of the article (optional)
+     * @param string $story_body Body of the article (optional)
+     * @param \DateTime $story_published_at Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)
+     * @param string $story_language This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)
+     * @param int $per_page This parameter is used for specifying number of items in each page. (optional, default to 3)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\Coverages
      */
     public function listCoverages($opts = array())
     {
@@ -318,62 +328,73 @@ class DefaultApi
      *
      * List coverages
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
-     *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
-     *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
-     *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['story_published_at']        <i><u>\DateTime</u></i> Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\Coverages, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param int $story_id A story id (optional)
+     * @param string $story_url An article or webpage (optional)
+     * @param string $story_title Title of the article (optional)
+     * @param string $story_body Body of the article (optional)
+     * @param \DateTime $story_published_at Publish date of the article. If you use a url or title and body of an article for getting coverages, this parameter is required. The format used is a restricted form of the canonical representation of dateTime in the [XML Schema specification (ISO 8601)](https://www.w3.org/TR/xmlschema-2/#dateTime). (optional)
+     * @param string $story_language This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)
+     * @param int $per_page This parameter is used for specifying number of items in each page. (optional, default to 3)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\Coverages, HTTP status code, HTTP response headers (array of strings)
      */
     public function listCoveragesWithHttpInfo($opts = array())
     {
@@ -399,6 +420,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -418,6 +446,14 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
         $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
@@ -429,36 +465,92 @@ class DefaultApi
         $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listCoverages, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listCoverages, must be bigger than 0.0.');
         }
 
         if (!is_null($per_page) && ($per_page > 100.0)) {
@@ -471,14 +563,14 @@ class DefaultApi
         // parse inputs
         $resourcePath = "/coverages";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
@@ -568,6 +660,34 @@ class DefaultApi
             $formParams['media.images.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_max);
         }
         // form params
+        if ($media_images_width_min !== null) {
+            $formParams['media.images.width.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_width_min);
+        }
+        // form params
+        if ($media_images_width_max !== null) {
+            $formParams['media.images.width.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_width_max);
+        }
+        // form params
+        if ($media_images_height_min !== null) {
+            $formParams['media.images.height.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_height_min);
+        }
+        // form params
+        if ($media_images_height_max !== null) {
+            $formParams['media.images.height.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_height_max);
+        }
+        // form params
+        if ($media_images_content_length_min !== null) {
+            $formParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_content_length_min);
+        }
+        // form params
+        if ($media_images_content_length_max !== null) {
+            $formParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_content_length_max);
+        }
+        // form params
+        if ($media_images_format !== null) {
+            $formParams['media.images.format[]'] = $this->apiClient->getSerializer()->toFormValue($media_images_format);
+        }
+        // form params
         if ($media_videos_count_min !== null) {
             $formParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_min);
         }
@@ -642,6 +762,38 @@ class DefaultApi
         // form params
         if ($source_rankings_alexa_country !== null) {
             $formParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_country);
+        }
+        // form params
+        if ($social_shares_count_facebook_min !== null) {
+            $formParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_facebook_min);
+        }
+        // form params
+        if ($social_shares_count_facebook_max !== null) {
+            $formParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_facebook_max);
+        }
+        // form params
+        if ($social_shares_count_google_plus_min !== null) {
+            $formParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_google_plus_min);
+        }
+        // form params
+        if ($social_shares_count_google_plus_max !== null) {
+            $formParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_google_plus_max);
+        }
+        // form params
+        if ($social_shares_count_linkedin_min !== null) {
+            $formParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_linkedin_min);
+        }
+        // form params
+        if ($social_shares_count_linkedin_max !== null) {
+            $formParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_linkedin_max);
+        }
+        // form params
+        if ($social_shares_count_reddit_min !== null) {
+            $formParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_reddit_min);
+        }
+        // form params
+        if ($social_shares_count_reddit_max !== null) {
+            $formParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_reddit_max);
         }
         // form params
         if ($cluster !== null) {
@@ -712,7 +864,7 @@ class DefaultApi
                 '/coverages'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Coverages', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Coverages', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -750,56 +902,67 @@ class DefaultApi
      *
      * List histograms
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
-     *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
-     *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
-     *    <li>['field']        <i><u>string</u></i> This parameter is used for specifying the y-axis variable for the histogram. (optional, default to social_shares_count)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return \Aylien\NewsApi\Models\Histograms
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param int $interval_start This parameter is used for setting the start data point of histogram intervals. (optional)
+     * @param int $interval_end This parameter is used for setting the end data point of histogram intervals. (optional)
+     * @param int $interval_width This parameter is used for setting the width of histogram intervals. (optional)
+     * @param string $field This parameter is used for specifying the y-axis variable for the histogram. (optional, default to social_shares_count)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\Histograms
      */
     public function listHistograms($opts = array())
     {
@@ -812,56 +975,67 @@ class DefaultApi
      *
      * List histograms
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['interval_start']        <i><u>int</u></i> This parameter is used for setting the start data point of histogram intervals. (optional)</li>
-     *    <li>['interval_end']        <i><u>int</u></i> This parameter is used for setting the end data point of histogram intervals. (optional)</li>
-     *    <li>['interval_width']        <i><u>int</u></i> This parameter is used for setting the width of histogram intervals. (optional)</li>
-     *    <li>['field']        <i><u>string</u></i> This parameter is used for specifying the y-axis variable for the histogram. (optional, default to social_shares_count)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\Histograms, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param int $interval_start This parameter is used for setting the start data point of histogram intervals. (optional)
+     * @param int $interval_end This parameter is used for setting the end data point of histogram intervals. (optional)
+     * @param int $interval_width This parameter is used for setting the width of histogram intervals. (optional)
+     * @param string $field This parameter is used for specifying the y-axis variable for the histogram. (optional, default to social_shares_count)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\Histograms, HTTP status code, HTTP response headers (array of strings)
      */
     public function listHistogramsWithHttpInfo($opts = array())
     {
@@ -887,6 +1061,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -906,54 +1087,118 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $interval_start = (!empty($opts['interval_start']) ? $opts['interval_start'] : null);
         $interval_end = (!empty($opts['interval_end']) ? $opts['interval_end'] : null);
         $interval_width = (!empty($opts['interval_width']) ? $opts['interval_width'] : null);
         $field = (!empty($opts['field']) ? $opts['field'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listHistograms, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listHistograms, must be bigger than 0.0.');
         }
 
         // parse inputs
         $resourcePath = "/histograms";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // query params
         if (is_array($id)) {
@@ -1070,6 +1315,37 @@ class DefaultApi
             $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
         }
         // query params
+        if ($media_images_width_min !== null) {
+            $queryParams['media.images.width.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_min);
+        }
+        // query params
+        if ($media_images_width_max !== null) {
+            $queryParams['media.images.width.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_max);
+        }
+        // query params
+        if ($media_images_height_min !== null) {
+            $queryParams['media.images.height.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_min);
+        }
+        // query params
+        if ($media_images_height_max !== null) {
+            $queryParams['media.images.height.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_max);
+        }
+        // query params
+        if ($media_images_content_length_min !== null) {
+            $queryParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_min);
+        }
+        // query params
+        if ($media_images_content_length_max !== null) {
+            $queryParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_max);
+        }
+        // query params
+        if (is_array($media_images_format)) {
+            $media_images_format = $this->apiClient->getSerializer()->serializeCollection($media_images_format, 'multi', true);
+        }
+        if ($media_images_format !== null) {
+            $queryParams['media.images.format[]'] = $this->apiClient->getSerializer()->toQueryValue($media_images_format);
+        }
+        // query params
         if ($media_videos_count_min !== null) {
             $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
         }
@@ -1182,6 +1458,38 @@ class DefaultApi
             $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
         }
         // query params
+        if ($social_shares_count_facebook_min !== null) {
+            $queryParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_min);
+        }
+        // query params
+        if ($social_shares_count_facebook_max !== null) {
+            $queryParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_max);
+        }
+        // query params
+        if ($social_shares_count_google_plus_min !== null) {
+            $queryParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_min);
+        }
+        // query params
+        if ($social_shares_count_google_plus_max !== null) {
+            $queryParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_max);
+        }
+        // query params
+        if ($social_shares_count_linkedin_min !== null) {
+            $queryParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_min);
+        }
+        // query params
+        if ($social_shares_count_linkedin_max !== null) {
+            $queryParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_max);
+        }
+        // query params
+        if ($social_shares_count_reddit_min !== null) {
+            $queryParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_min);
+        }
+        // query params
+        if ($social_shares_count_reddit_max !== null) {
+            $queryParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_max);
+        }
+        // query params
         if ($interval_start !== null) {
             $queryParams['interval.start'] = $this->apiClient->getSerializer()->toQueryValue($interval_start);
         }
@@ -1229,7 +1537,7 @@ class DefaultApi
                 '/histograms'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Histograms', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Histograms', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -1267,63 +1575,73 @@ class DefaultApi
      *
      * List related stories
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
-     *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
-     *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
-     *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting the result by the specified value. (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     *
-     * @return \Aylien\NewsApi\Models\RelatedStories
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param int $story_id A story id (optional)
+     * @param string $story_url An article or webpage (optional)
+     * @param string $story_title Title of the article (optional)
+     * @param string $story_body Body of the article (optional)
+     * @param string $boost_by This parameter is used for boosting the result by the specified value. (optional)
+     * @param string $story_language This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)
+     * @param int $per_page This parameter is used for specifying number of items in each page. (optional, default to 3)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\RelatedStories
      */
     public function listRelatedStories($opts = array())
     {
@@ -1336,62 +1654,73 @@ class DefaultApi
      *
      * List related stories
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['story_id']        <i><u>int</u></i> A story id (optional)</li>
-     *    <li>['story_url']        <i><u>string</u></i> An article or webpage (optional)</li>
-     *    <li>['story_title']        <i><u>string</u></i> Title of the article (optional)</li>
-     *    <li>['story_body']        <i><u>string</u></i> Body of the article (optional)</li>
-     *    <li>['boost_by']        <i><u>string</u></i> This parameter is used for boosting the result by the specified value. (optional)</li>
-     *    <li>['story_language']        <i><u>string</u></i> This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 3)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\RelatedStories, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param int $story_id A story id (optional)
+     * @param string $story_url An article or webpage (optional)
+     * @param string $story_title Title of the article (optional)
+     * @param string $story_body Body of the article (optional)
+     * @param string $boost_by This parameter is used for boosting the result by the specified value. (optional)
+     * @param string $story_language This parameter is used for setting the language of the story. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional, default to auto)
+     * @param int $per_page This parameter is used for specifying number of items in each page. (optional, default to 3)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\RelatedStories, HTTP status code, HTTP response headers (array of strings)
      */
     public function listRelatedStoriesWithHttpInfo($opts = array())
     {
@@ -1417,6 +1746,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -1436,6 +1772,14 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
         $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
@@ -1447,36 +1791,92 @@ class DefaultApi
         $story_language = (!empty($opts['story_language']) ? $opts['story_language'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listRelatedStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listRelatedStories, must be bigger than 0.0.');
         }
 
         if (!is_null($per_page) && ($per_page > 100.0)) {
@@ -1489,14 +1889,14 @@ class DefaultApi
         // parse inputs
         $resourcePath = "/related_stories";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
@@ -1586,6 +1986,34 @@ class DefaultApi
             $formParams['media.images.count.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_count_max);
         }
         // form params
+        if ($media_images_width_min !== null) {
+            $formParams['media.images.width.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_width_min);
+        }
+        // form params
+        if ($media_images_width_max !== null) {
+            $formParams['media.images.width.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_width_max);
+        }
+        // form params
+        if ($media_images_height_min !== null) {
+            $formParams['media.images.height.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_height_min);
+        }
+        // form params
+        if ($media_images_height_max !== null) {
+            $formParams['media.images.height.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_height_max);
+        }
+        // form params
+        if ($media_images_content_length_min !== null) {
+            $formParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toFormValue($media_images_content_length_min);
+        }
+        // form params
+        if ($media_images_content_length_max !== null) {
+            $formParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toFormValue($media_images_content_length_max);
+        }
+        // form params
+        if ($media_images_format !== null) {
+            $formParams['media.images.format[]'] = $this->apiClient->getSerializer()->toFormValue($media_images_format);
+        }
+        // form params
         if ($media_videos_count_min !== null) {
             $formParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toFormValue($media_videos_count_min);
         }
@@ -1662,6 +2090,38 @@ class DefaultApi
             $formParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toFormValue($source_rankings_alexa_country);
         }
         // form params
+        if ($social_shares_count_facebook_min !== null) {
+            $formParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_facebook_min);
+        }
+        // form params
+        if ($social_shares_count_facebook_max !== null) {
+            $formParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_facebook_max);
+        }
+        // form params
+        if ($social_shares_count_google_plus_min !== null) {
+            $formParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_google_plus_min);
+        }
+        // form params
+        if ($social_shares_count_google_plus_max !== null) {
+            $formParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_google_plus_max);
+        }
+        // form params
+        if ($social_shares_count_linkedin_min !== null) {
+            $formParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_linkedin_min);
+        }
+        // form params
+        if ($social_shares_count_linkedin_max !== null) {
+            $formParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_linkedin_max);
+        }
+        // form params
+        if ($social_shares_count_reddit_min !== null) {
+            $formParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_reddit_min);
+        }
+        // form params
+        if ($social_shares_count_reddit_max !== null) {
+            $formParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toFormValue($social_shares_count_reddit_max);
+        }
+        // form params
         if ($cluster !== null) {
             $formParams['cluster'] = $this->apiClient->getSerializer()->toFormValue($cluster);
         }
@@ -1730,7 +2190,7 @@ class DefaultApi
                 '/related_stories'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\RelatedStories', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\RelatedStories', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -1768,60 +2228,70 @@ class DefaultApi
      *
      * List Stories
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_by']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order direction of the result. (optional, default to desc)</li>
-     *    <li>['cursor']        <i><u>string</u></i> This parameter is used for finding a specific page. (optional, default to *)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 10)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     *
-     * @return \Aylien\NewsApi\Models\Stories
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param string $sort_by This parameter is used for changing the order column of the results. (optional, default to published_at)
+     * @param string $sort_direction This parameter is used for changing the order direction of the result. (optional, default to desc)
+     * @param string $cursor This parameter is used for finding a specific page. You can read more about pagination of results [here](https://newsapi.aylien.com/docs/pagination-of-results). (optional, default to *)
+     * @param int $per_page This parameter is used for specifying number of items in each page You can read more about pagination of results [here](https://newsapi.aylien.com/docs/pagination-of-results) (optional, default to 10)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\Stories
      */
     public function listStories($opts = array())
     {
@@ -1834,59 +2304,70 @@ class DefaultApi
      *
      * List Stories
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['cluster']        <i><u>bool</u></i> This parameter enables clustering for the returned stories. (optional, default to false)</li>
-     *    <li>['cluster_algorithm']        <i><u>string</u></i> This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. (optional, default to lingo)</li>
-     *    <li>['return']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_by']        <i><u>string[]</u></i> This parameter is used for specifying return fields. (optional)</li>
-     *    <li>['sort_direction']        <i><u>string</u></i> This parameter is used for changing the order direction of the result. (optional, default to desc)</li>
-     *    <li>['cursor']        <i><u>string</u></i> This parameter is used for finding a specific page. (optional, default to *)</li>
-     *    <li>['per_page']        <i><u>int</u></i> This parameter is used for specifying number of items in each page. (optional, default to 10)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\Stories, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param bool $cluster This parameter enables clustering for the returned stories. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to false)
+     * @param string $cluster_algorithm This parameter is used for specifying the clustering algorithm you wish to use. It supprts STC, Lingo and [k-means](https://en.wikipedia.org/wiki/K-means_clustering) algorithms. You can read more about working with clustering [here](https://newsapi.aylien.com/docs/working-with-clustering). (optional, default to lingo)
+     * @param string[] $return This parameter is used for specifying return fields. (optional)
+     * @param string $sort_by This parameter is used for changing the order column of the results. (optional, default to published_at)
+     * @param string $sort_direction This parameter is used for changing the order direction of the result. (optional, default to desc)
+     * @param string $cursor This parameter is used for finding a specific page. You can read more about pagination of results [here](https://newsapi.aylien.com/docs/pagination-of-results). (optional, default to *)
+     * @param int $per_page This parameter is used for specifying number of items in each page You can read more about pagination of results [here](https://newsapi.aylien.com/docs/pagination-of-results) (optional, default to 10)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\Stories, HTTP status code, HTTP response headers (array of strings)
      */
     public function listStoriesWithHttpInfo($opts = array())
     {
@@ -1912,6 +2393,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -1931,6 +2419,14 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $cluster = (!empty($opts['cluster']) ? $opts['cluster'] : null);
         $cluster_algorithm = (!empty($opts['cluster_algorithm']) ? $opts['cluster_algorithm'] : null);
         $return = (!empty($opts['return']) ? $opts['return'] : null);
@@ -1939,36 +2435,92 @@ class DefaultApi
         $cursor = (!empty($opts['cursor']) ? $opts['cursor'] : null);
         $per_page = (!empty($opts['per_page']) ? $opts['per_page'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listStories, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listStories, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listStories, must be bigger than 0.0.');
         }
 
         if (!is_null($per_page) && ($per_page > 100.0)) {
@@ -1981,14 +2533,14 @@ class DefaultApi
         // parse inputs
         $resourcePath = "/stories";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // query params
         if (is_array($id)) {
@@ -2105,6 +2657,37 @@ class DefaultApi
             $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
         }
         // query params
+        if ($media_images_width_min !== null) {
+            $queryParams['media.images.width.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_min);
+        }
+        // query params
+        if ($media_images_width_max !== null) {
+            $queryParams['media.images.width.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_max);
+        }
+        // query params
+        if ($media_images_height_min !== null) {
+            $queryParams['media.images.height.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_min);
+        }
+        // query params
+        if ($media_images_height_max !== null) {
+            $queryParams['media.images.height.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_max);
+        }
+        // query params
+        if ($media_images_content_length_min !== null) {
+            $queryParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_min);
+        }
+        // query params
+        if ($media_images_content_length_max !== null) {
+            $queryParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_max);
+        }
+        // query params
+        if (is_array($media_images_format)) {
+            $media_images_format = $this->apiClient->getSerializer()->serializeCollection($media_images_format, 'multi', true);
+        }
+        if ($media_images_format !== null) {
+            $queryParams['media.images.format[]'] = $this->apiClient->getSerializer()->toQueryValue($media_images_format);
+        }
+        // query params
         if ($media_videos_count_min !== null) {
             $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
         }
@@ -2215,6 +2798,38 @@ class DefaultApi
         }
         if ($source_rankings_alexa_country !== null) {
             $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
+        }
+        // query params
+        if ($social_shares_count_facebook_min !== null) {
+            $queryParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_min);
+        }
+        // query params
+        if ($social_shares_count_facebook_max !== null) {
+            $queryParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_max);
+        }
+        // query params
+        if ($social_shares_count_google_plus_min !== null) {
+            $queryParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_min);
+        }
+        // query params
+        if ($social_shares_count_google_plus_max !== null) {
+            $queryParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_max);
+        }
+        // query params
+        if ($social_shares_count_linkedin_min !== null) {
+            $queryParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_min);
+        }
+        // query params
+        if ($social_shares_count_linkedin_max !== null) {
+            $queryParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_max);
+        }
+        // query params
+        if ($social_shares_count_reddit_min !== null) {
+            $queryParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_min);
+        }
+        // query params
+        if ($social_shares_count_reddit_max !== null) {
+            $queryParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_max);
         }
         // query params
         if ($cluster !== null) {
@@ -2279,7 +2894,7 @@ class DefaultApi
                 '/stories'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Stories', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Stories', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -2317,54 +2932,64 @@ class DefaultApi
      *
      * List time series
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     *
-     * @return \Aylien\NewsApi\Models\TimeSeriesList
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)
+     * @param string $period The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\TimeSeriesList
      */
     public function listTimeSeries($opts = array())
     {
@@ -2377,53 +3002,64 @@ class DefaultApi
      *
      * List time series
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['period']        <i><u>string</u></i> The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\TimeSeriesList, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)
+     * @param string $period The size of each date range is expressed as an interval to be added to the lower bound. It supports Date Math Syntax. Valid options are &#x60;+&#x60; following an integer number greater than 0 and one of the Date Math keywords. e.g. &#x60;+1DAY&#x60;, &#x60;+2MINUTES&#x60; and &#x60;+1MONTH&#x60;. Here are [Supported keywords](https://newsapi.aylien.com/docs/working-with-dates#date-math). (optional, default to +1DAY)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\TimeSeriesList, HTTP status code, HTTP response headers (array of strings)
      */
     public function listTimeSeriesWithHttpInfo($opts = array())
     {
@@ -2447,6 +3083,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -2466,53 +3109,117 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $published_at_start = (!empty($opts['published_at_start']) ? $opts['published_at_start'] : null);
         $published_at_end = (!empty($opts['published_at_end']) ? $opts['published_at_end'] : null);
         $period = (!empty($opts['period']) ? $opts['period'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTimeSeries, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listTimeSeries, must be bigger than 0.0.');
         }
 
         // parse inputs
         $resourcePath = "/time_series";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // query params
         if (is_array($id)) {
@@ -2619,6 +3326,37 @@ class DefaultApi
         // query params
         if ($media_images_count_max !== null) {
             $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
+        }
+        // query params
+        if ($media_images_width_min !== null) {
+            $queryParams['media.images.width.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_min);
+        }
+        // query params
+        if ($media_images_width_max !== null) {
+            $queryParams['media.images.width.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_max);
+        }
+        // query params
+        if ($media_images_height_min !== null) {
+            $queryParams['media.images.height.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_min);
+        }
+        // query params
+        if ($media_images_height_max !== null) {
+            $queryParams['media.images.height.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_max);
+        }
+        // query params
+        if ($media_images_content_length_min !== null) {
+            $queryParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_min);
+        }
+        // query params
+        if ($media_images_content_length_max !== null) {
+            $queryParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_max);
+        }
+        // query params
+        if (is_array($media_images_format)) {
+            $media_images_format = $this->apiClient->getSerializer()->serializeCollection($media_images_format, 'multi', true);
+        }
+        if ($media_images_format !== null) {
+            $queryParams['media.images.format[]'] = $this->apiClient->getSerializer()->toQueryValue($media_images_format);
         }
         // query params
         if ($media_videos_count_min !== null) {
@@ -2731,6 +3469,38 @@ class DefaultApi
         }
         if ($source_rankings_alexa_country !== null) {
             $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
+        }
+        // query params
+        if ($social_shares_count_facebook_min !== null) {
+            $queryParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_min);
+        }
+        // query params
+        if ($social_shares_count_facebook_max !== null) {
+            $queryParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_max);
+        }
+        // query params
+        if ($social_shares_count_google_plus_min !== null) {
+            $queryParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_min);
+        }
+        // query params
+        if ($social_shares_count_google_plus_max !== null) {
+            $queryParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_max);
+        }
+        // query params
+        if ($social_shares_count_linkedin_min !== null) {
+            $queryParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_min);
+        }
+        // query params
+        if ($social_shares_count_linkedin_max !== null) {
+            $queryParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_max);
+        }
+        // query params
+        if ($social_shares_count_reddit_min !== null) {
+            $queryParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_min);
+        }
+        // query params
+        if ($social_shares_count_reddit_max !== null) {
+            $queryParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_max);
         }
         // query params
         if ($published_at_start !== null) {
@@ -2776,7 +3546,7 @@ class DefaultApi
                 '/time_series'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\TimeSeriesList', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\TimeSeriesList', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -2814,54 +3584,64 @@ class DefaultApi
      *
      * List trends
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     *
-     * @return \Aylien\NewsApi\Models\Trends
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param string $field This parameter is used to specify the trend field. (optional)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return \Aylien\NewsApi\Models\Trends
      */
     public function listTrends($opts = array())
     {
@@ -2874,53 +3654,64 @@ class DefaultApi
      *
      * List trends
      *
-     * <ul>
-     *    <li>['id']         <i><u>int[]</u></i> This parameter is used for finding stroies by story id. (optional)</li>
-     *    <li>['title']        <i><u>string</u></i> This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['body']        <i><u>string</u></i> This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['text']        <i><u>string</u></i> This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)</li>
-     *    <li>['language']        <i><u>string[]</u></i> This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)</li>
-     *    <li>['published_at_start']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW-7DAYS/DAY)</li>
-     *    <li>['published_at_end']        <i><u>string</u></i> This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional, default to NOW/DAY)</li>
-     *    <li>['categories_taxonomy']        <i><u>string</u></i> This parameter is used for defining the type of the taxonomy for the rest of the categories queries. (optional)</li>
-     *    <li>['categories_confident']        <i><u>bool</u></i> This parameter is used for finding stories whose categories are confident. (optional, default to true)</li>
-     *    <li>['categories_id']        <i><u>string[]</u></i> This parameter is used for finding stories by categories id. (optional)</li>
-     *    <li>['categories_level']        <i><u>int[]</u></i> This parameter is used for finding stories by categories level. (optional)</li>
-     *    <li>['entities_title_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. (optional)</li>
-     *    <li>['entities_title_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in story titles. (optional)</li>
-     *    <li>['entities_body_text']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_type']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. (optional)</li>
-     *    <li>['entities_body_links_dbpedia']        <i><u>string[]</u></i> This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. (optional)</li>
-     *    <li>['sentiment_title_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose title sentiment is the specified value. (optional)</li>
-     *    <li>['sentiment_body_polarity']        <i><u>string</u></i> This parameter is used for finding stories whose body sentiment is the specified value. (optional)</li>
-     *    <li>['media_images_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_images_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_min']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)</li>
-     *    <li>['media_videos_count_max']        <i><u>int</u></i> This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)</li>
-     *    <li>['author_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose author id is the specified value. (optional)</li>
-     *    <li>['author_name']        <i><u>string</u></i> This parameter is used for finding stories whose author full name contains the specified value. (optional)</li>
-     *    <li>['source_id']        <i><u>int[]</u></i> This parameter is used for finding stories whose source id is the specified value. (optional)</li>
-     *    <li>['source_name']        <i><u>string[]</u></i> This parameter is used for finding stories whose source name contains the specified value. (optional)</li>
-     *    <li>['source_domain']        <i><u>string[]</u></i> This parameter is used for finding stories whose source domain is the specified value. (optional)</li>
-     *    <li>['source_locations_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_locations_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_country']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_state']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_city']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['source_scopes_level']        <i><u>string[]</u></i> This parameter is used for finding stories whose source scopes  is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)</li>
-     *    <li>['$source_links_in_count_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['$source_links_in_count_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count here [https://newsapi.aylien.com/docs/working-with-links-in-count](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_min']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_rank_max']        <i><u>int</u></i> This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['source_rankings_alexa_country']        <i><u>string[]</u></i> This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks here [https://newsapi.aylien.com/docs/working-with-alexa-ranks](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)</li>
-     *    <li>['field']        <i><u>string</u></i> This parameter is used to specify the trend field. (optional)</li>
-     * </ul>
-     *
-     * @param array $opts (See above)
-     * @return Array of \Aylien\NewsApi\Models\Trends, HTTP status code, HTTP response headers (array of strings)
+     * @param int[] $id This parameter is used for finding stories by story id. (optional)
+     * @param string $title This parameter is used for finding stories whose title contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $body This parameter is used for finding stories whose body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string $text This parameter is used for finding stories whose title or body contains a specfic keyword. It supports [boolean operators](https://newsapi.aylien.com/docs/boolean-operators). (optional)
+     * @param string[] $language This parameter is used for finding stories whose language is the specified value. It supports [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes. (optional)
+     * @param string $published_at_start This parameter is used for finding stories whose published at time is greater than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $published_at_end This parameter is used for finding stories whose published at time is less than the specified value. [Here](https://newsapi.aylien.com/docs/working-with-dates) you can find more information about how [to work with dates](https://newsapi.aylien.com/docs/working-with-dates). (optional)
+     * @param string $categories_taxonomy This parameter is used for defining the type of the taxonomy for the rest of the categories queries. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param bool $categories_confident This parameter is used for finding stories whose categories are confident. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional, default to true)
+     * @param string[] $categories_id This parameter is used for finding stories by categories id. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param int[] $categories_level This parameter is used for finding stories by categories level. You can read more about working with categories [here](https://newsapi.aylien.com/docs/working-with-categories). (optional)
+     * @param string[] $entities_title_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_title_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in story titles. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_text This parameter is used to find stories based on the specified entities &#x60;text&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_type This parameter is used to find stories based on the specified entities &#x60;type&#x60; in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string[] $entities_body_links_dbpedia This parameter is used to find stories based on the specified entities dbpedia URL in the body of stories. You can read more about working with entities [here](https://newsapi.aylien.com/docs/working-with-entities). (optional)
+     * @param string $sentiment_title_polarity This parameter is used for finding stories whose title sentiment is the specified value. (optional)
+     * @param string $sentiment_body_polarity This parameter is used for finding stories whose body sentiment is the specified value. (optional)
+     * @param int $media_images_count_min This parameter is used for finding stories whose number of images is greater than or equal to the specified value. (optional)
+     * @param int $media_images_count_max This parameter is used for finding stories whose number of images is less than or equal to the specified value. (optional)
+     * @param int $media_images_width_min This parameter is used for finding stories whose width of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_width_max This parameter is used for finding stories whose width of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_height_min This parameter is used for finding stories whose height of images are greater than or equal to the specified value. (optional)
+     * @param int $media_images_height_max This parameter is used for finding stories whose height of images are less than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_min This parameter is used for finding stories whose images content length are greater than or equal to the specified value. (optional)
+     * @param int $media_images_content_length_max This parameter is used for finding stories whose images content length are less than or equal to the specified value. (optional)
+     * @param string[] $media_images_format This parameter is used for finding stories whose images format are the specified value. (optional)
+     * @param int $media_videos_count_min This parameter is used for finding stories whose number of videos is greater than or equal to the specified value. (optional)
+     * @param int $media_videos_count_max This parameter is used for finding stories whose number of videos is less than or equal to the specified value. (optional)
+     * @param int[] $author_id This parameter is used for finding stories whose author id is the specified value. (optional)
+     * @param string $author_name This parameter is used for finding stories whose author full name contains the specified value. (optional)
+     * @param int[] $source_id This parameter is used for finding stories whose source id is the specified value. (optional)
+     * @param string[] $source_name This parameter is used for finding stories whose source name contains the specified value. (optional)
+     * @param string[] $source_domain This parameter is used for finding stories whose source domain is the specified value. (optional)
+     * @param string[] $source_locations_country This parameter is used for finding stories whose source country is the specified value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_state This parameter is used for finding stories whose source state/province is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_locations_city This parameter is used for finding stories whose source city is the specified value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_country This parameter is used for finding stories whose source scopes is the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_state This parameter is used for finding stories whose source scopes is the specified state/province value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_city This parameter is used for finding stories whose source scopes is the specified city value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param string[] $source_scopes_level This parameter is used for finding stories whose source scopes is the specified level value. [Here](https://newsapi.aylien.com/docs/working-with-locations) you can find more information about how [to work with locations](https://newsapi.aylien.com/docs/working-with-locations). (optional)
+     * @param int $source_links_in_count_min This parameter is used for finding stories from sources whose Links in count is greater than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_links_in_count_max This parameter is used for finding stories from sources whose Links in count is less than or equal to the specified value. You can read more about working with Links in count [here](https://newsapi.aylien.com/docs/working-with-links-in-count). (optional)
+     * @param int $source_rankings_alexa_rank_min This parameter is used for finding stories from sources whose Alexa rank is greater than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $source_rankings_alexa_rank_max This parameter is used for finding stories from sources whose Alexa rank is less than or equal to the specified value. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param string[] $source_rankings_alexa_country This parameter is used for finding stories from sources whose Alexa rank is in the specified country value. It supports [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. You can read more about working with Alexa ranks [here](https://newsapi.aylien.com/docs/working-with-alexa-ranks). (optional)
+     * @param int $social_shares_count_facebook_min This parameter is used for finding stories whose Facebook social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_facebook_max This parameter is used for finding stories whose Facebook social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_min This parameter is used for finding stories whose Google+ social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_google_plus_max This parameter is used for finding stories whose Google+ social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_min This parameter is used for finding stories whose LinkedIn social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_linkedin_max This parameter is used for finding stories whose LinkedIn social shares count is less than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_min This parameter is used for finding stories whose Reddit social shares count is greater than or equal to the specified value. (optional)
+     * @param int $social_shares_count_reddit_max This parameter is used for finding stories whose Reddit social shares count is less than or equal to the specified value. (optional)
+     * @param string $field This parameter is used to specify the trend field. (optional)
      * @throws \Aylien\NewsApi\ApiException on non-2xx response
+     * @return array of \Aylien\NewsApi\Models\Trends, HTTP status code, HTTP response headers (array of strings)
      */
     public function listTrendsWithHttpInfo($opts = array())
     {
@@ -2946,6 +3737,13 @@ class DefaultApi
         $sentiment_body_polarity = (!empty($opts['sentiment_body_polarity']) ? $opts['sentiment_body_polarity'] : null);
         $media_images_count_min = (!empty($opts['media_images_count_min']) ? $opts['media_images_count_min'] : null);
         $media_images_count_max = (!empty($opts['media_images_count_max']) ? $opts['media_images_count_max'] : null);
+        $media_images_width_min = (!empty($opts['media_images_width_min']) ? $opts['media_images_width_min'] : null);
+        $media_images_width_max = (!empty($opts['media_images_width_max']) ? $opts['media_images_width_max'] : null);
+        $media_images_height_min = (!empty($opts['media_images_height_min']) ? $opts['media_images_height_min'] : null);
+        $media_images_height_max = (!empty($opts['media_images_height_max']) ? $opts['media_images_height_max'] : null);
+        $media_images_content_length_min = (!empty($opts['media_images_content_length_min']) ? $opts['media_images_content_length_min'] : null);
+        $media_images_content_length_max = (!empty($opts['media_images_content_length_max']) ? $opts['media_images_content_length_max'] : null);
+        $media_images_format = (!empty($opts['media_images_format']) ? $opts['media_images_format'] : null);
         $media_videos_count_min = (!empty($opts['media_videos_count_min']) ? $opts['media_videos_count_min'] : null);
         $media_videos_count_max = (!empty($opts['media_videos_count_max']) ? $opts['media_videos_count_max'] : null);
         $author_id = (!empty($opts['author_id']) ? $opts['author_id'] : null);
@@ -2965,51 +3763,115 @@ class DefaultApi
         $source_rankings_alexa_rank_min = (!empty($opts['source_rankings_alexa_rank_min']) ? $opts['source_rankings_alexa_rank_min'] : null);
         $source_rankings_alexa_rank_max = (!empty($opts['source_rankings_alexa_rank_max']) ? $opts['source_rankings_alexa_rank_max'] : null);
         $source_rankings_alexa_country = (!empty($opts['source_rankings_alexa_country']) ? $opts['source_rankings_alexa_country'] : null);
+        $social_shares_count_facebook_min = (!empty($opts['social_shares_count_facebook_min']) ? $opts['social_shares_count_facebook_min'] : null);
+        $social_shares_count_facebook_max = (!empty($opts['social_shares_count_facebook_max']) ? $opts['social_shares_count_facebook_max'] : null);
+        $social_shares_count_google_plus_min = (!empty($opts['social_shares_count_google_plus_min']) ? $opts['social_shares_count_google_plus_min'] : null);
+        $social_shares_count_google_plus_max = (!empty($opts['social_shares_count_google_plus_max']) ? $opts['social_shares_count_google_plus_max'] : null);
+        $social_shares_count_linkedin_min = (!empty($opts['social_shares_count_linkedin_min']) ? $opts['social_shares_count_linkedin_min'] : null);
+        $social_shares_count_linkedin_max = (!empty($opts['social_shares_count_linkedin_max']) ? $opts['social_shares_count_linkedin_max'] : null);
+        $social_shares_count_reddit_min = (!empty($opts['social_shares_count_reddit_min']) ? $opts['social_shares_count_reddit_min'] : null);
+        $social_shares_count_reddit_max = (!empty($opts['social_shares_count_reddit_max']) ? $opts['social_shares_count_reddit_max'] : null);
         $field = (!empty($opts['field']) ? $opts['field'] : null);
         
-        if (!is_null($media_images_count_min) && ($media_images_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_min) && ($media_images_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_images_count_max) && ($media_images_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_count_max) && ($media_images_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_count_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_min) && ($media_videos_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_min) && ($media_images_width_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($media_videos_count_max) && ($media_videos_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_width_max) && ($media_images_width_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_width_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_min) && ($media_images_height_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_height_max) && ($media_images_height_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_height_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_min) && ($media_images_content_length_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
-        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTrends, must be bigger than or equal to 0.0.');
+        if (!is_null($media_images_content_length_max) && ($media_images_content_length_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_images_content_length_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_min) && ($media_videos_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($media_videos_count_max) && ($media_videos_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$media_videos_count_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_min) && ($source_links_in_count_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_links_in_count_max) && ($source_links_in_count_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_links_in_count_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_min) && ($source_rankings_alexa_rank_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($source_rankings_alexa_rank_max) && ($source_rankings_alexa_rank_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$source_rankings_alexa_rank_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_min) && ($social_shares_count_facebook_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_facebook_max) && ($social_shares_count_facebook_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_facebook_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_min) && ($social_shares_count_google_plus_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_google_plus_max) && ($social_shares_count_google_plus_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_google_plus_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_min) && ($social_shares_count_linkedin_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_linkedin_max) && ($social_shares_count_linkedin_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_linkedin_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_min) && ($social_shares_count_reddit_min <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_min" when calling DefaultApi.listTrends, must be bigger than 0.0.');
+        }
+
+        if (!is_null($social_shares_count_reddit_max) && ($social_shares_count_reddit_max <= 0.0)) {
+            throw new \InvalidArgumentException('invalid value for "$social_shares_count_reddit_max" when calling DefaultApi.listTrends, must be bigger than 0.0.');
         }
 
         // parse inputs
         $resourcePath = "/trends";
         $httpBody = '';
-        $queryParams = array();
-        $headerParams = array();
-        $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', 'text/xml'));
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/x-www-form-urlencoded'));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/x-www-form-urlencoded']);
 
         // query params
         if (is_array($id)) {
@@ -3126,6 +3988,37 @@ class DefaultApi
             $queryParams['media.images.count.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_count_max);
         }
         // query params
+        if ($media_images_width_min !== null) {
+            $queryParams['media.images.width.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_min);
+        }
+        // query params
+        if ($media_images_width_max !== null) {
+            $queryParams['media.images.width.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_width_max);
+        }
+        // query params
+        if ($media_images_height_min !== null) {
+            $queryParams['media.images.height.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_min);
+        }
+        // query params
+        if ($media_images_height_max !== null) {
+            $queryParams['media.images.height.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_height_max);
+        }
+        // query params
+        if ($media_images_content_length_min !== null) {
+            $queryParams['media.images.content_length.min'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_min);
+        }
+        // query params
+        if ($media_images_content_length_max !== null) {
+            $queryParams['media.images.content_length.max'] = $this->apiClient->getSerializer()->toQueryValue($media_images_content_length_max);
+        }
+        // query params
+        if (is_array($media_images_format)) {
+            $media_images_format = $this->apiClient->getSerializer()->serializeCollection($media_images_format, 'multi', true);
+        }
+        if ($media_images_format !== null) {
+            $queryParams['media.images.format[]'] = $this->apiClient->getSerializer()->toQueryValue($media_images_format);
+        }
+        // query params
         if ($media_videos_count_min !== null) {
             $queryParams['media.videos.count.min'] = $this->apiClient->getSerializer()->toQueryValue($media_videos_count_min);
         }
@@ -3238,6 +4131,38 @@ class DefaultApi
             $queryParams['source.rankings.alexa.country[]'] = $this->apiClient->getSerializer()->toQueryValue($source_rankings_alexa_country);
         }
         // query params
+        if ($social_shares_count_facebook_min !== null) {
+            $queryParams['social_shares_count.facebook.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_min);
+        }
+        // query params
+        if ($social_shares_count_facebook_max !== null) {
+            $queryParams['social_shares_count.facebook.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_facebook_max);
+        }
+        // query params
+        if ($social_shares_count_google_plus_min !== null) {
+            $queryParams['social_shares_count.google_plus.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_min);
+        }
+        // query params
+        if ($social_shares_count_google_plus_max !== null) {
+            $queryParams['social_shares_count.google_plus.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_google_plus_max);
+        }
+        // query params
+        if ($social_shares_count_linkedin_min !== null) {
+            $queryParams['social_shares_count.linkedin.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_min);
+        }
+        // query params
+        if ($social_shares_count_linkedin_max !== null) {
+            $queryParams['social_shares_count.linkedin.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_linkedin_max);
+        }
+        // query params
+        if ($social_shares_count_reddit_min !== null) {
+            $queryParams['social_shares_count.reddit.min'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_min);
+        }
+        // query params
+        if ($social_shares_count_reddit_max !== null) {
+            $queryParams['social_shares_count.reddit.max'] = $this->apiClient->getSerializer()->toQueryValue($social_shares_count_reddit_max);
+        }
+        // query params
         if ($field !== null) {
             $queryParams['field'] = $this->apiClient->getSerializer()->toQueryValue($field);
         }
@@ -3273,7 +4198,7 @@ class DefaultApi
                 '/trends'
             );
 
-            return array($this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Trends', $httpHeader), $statusCode, $httpHeader);
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Aylien\NewsApi\Models\Trends', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
@@ -3305,5 +4230,4 @@ class DefaultApi
             throw $e;
         }
     }
-
 }

@@ -1,6 +1,6 @@
 {
     "name": "aylien/newsapi",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.",
     "keywords": [
         "aylien",
@@ -10,7 +10,7 @@
         "sdk",
         "api"
     ],
-    "homepage": "https://github.com/AYLIEN/aylien_newsapi_php",
+    "homepage": "https://newsapi.aylien.com/",
     "license": "Apache-2.0",
     "authors": [
         {
@@ -28,7 +28,8 @@
     "require-dev": {
         "phpunit/phpunit": "~4.8",
         "satooshi/php-coveralls": "~1.0",
-        "squizlabs/php_codesniffer": "~2.6"
+        "squizlabs/php_codesniffer": "~2.6",
+        "friendsofphp/php-cs-fixer": "~1.12"
     },
     "autoload": {
         "psr-4": { "Aylien\\NewsApi\\" : "lib/" }

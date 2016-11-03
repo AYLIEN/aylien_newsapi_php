@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -38,7 +38,7 @@ use \ArrayAccess;
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link        https://github.com/AYLIEN/aylien_newsapi_php
+ * @link        https://newsapi.aylien.com/
  */
 class Sentiment implements ArrayAccess
 {
@@ -52,10 +52,10 @@ class Sentiment implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $apiTypes = array(
+    protected static $apiTypes = [
         'polarity' => 'string',
         'score' => 'double'
-    );
+    ];
 
     public static function apiTypes()
     {
@@ -66,38 +66,40 @@ class Sentiment implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
+    protected static $attributeMap = [
         'polarity' => 'polarity',
         'score' => 'score'
-    );
+    ];
+
+
+    /**
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = [
+        'polarity' => 'setPolarity',
+        'score' => 'setScore'
+    ];
+
+
+    /**
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = [
+        'polarity' => 'getPolarity',
+        'score' => 'getScore'
+    ];
 
     public static function attributeMap()
     {
         return self::$attributeMap;
     }
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     * @var string[]
-     */
-    protected static $setters = array(
-        'polarity' => 'setPolarity',
-        'score' => 'setScore'
-    );
-
     public static function setters()
     {
         return self::$setters;
     }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     * @var string[]
-     */
-    protected static $getters = array(
-        'polarity' => 'getPolarity',
-        'score' => 'getScore'
-    );
 
     public static function getters()
     {
@@ -128,11 +130,11 @@ class Sentiment implements ArrayAccess
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
@@ -147,8 +149,8 @@ class Sentiment implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
-        $allowed_values = array("positive", "neutral", "negative");
+        $invalid_properties = [];
+        $allowed_values = ["positive", "neutral", "negative"];
         if (!in_array($this->container['polarity'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'polarity', must be one of #{allowed_values}.";
         }
@@ -172,7 +174,7 @@ class Sentiment implements ArrayAccess
      */
     public function valid()
     {
-        $allowed_values = array("positive", "neutral", "negative");
+        $allowed_values = ["positive", "neutral", "negative"];
         if (!in_array($this->container['polarity'], $allowed_values)) {
             return false;
         }
@@ -203,7 +205,7 @@ class Sentiment implements ArrayAccess
     public function setPolarity($polarity)
     {
         $allowed_values = array('positive', 'neutral', 'negative');
-        if (!in_array($polarity, $allowed_values)) {
+        if (!is_null($polarity) && (!in_array($polarity, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'polarity', must be one of 'positive', 'neutral', 'negative'");
         }
         $this->container['polarity'] = $polarity;
@@ -228,12 +230,13 @@ class Sentiment implements ArrayAccess
     public function setScore($score)
     {
 
-        if ($score > 1.0) {
+        if (!is_null($score) && ($score > 1.0)) {
             throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be smaller than or equal to 1.0.');
         }
-        if ($score < 0.0) {
+        if (!is_null($score) && ($score < 0.0)) {
             throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be bigger than or equal to 0.0.');
         }
+
         $this->container['score'] = $score;
 
         return $this;

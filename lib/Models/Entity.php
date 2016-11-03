@@ -8,7 +8,7 @@
  * @package  Aylien\NewsApi
  * @author   Hamed Ramezanian Nik
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link     https://github.com/AYLIEN/aylien_newsapi_php
+ * @link     https://newsapi.aylien.com/
  */
 /**
  *  Copyright 2016 Aylien, Inc.
@@ -38,7 +38,7 @@ use \ArrayAccess;
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
- * @link        https://github.com/AYLIEN/aylien_newsapi_php
+ * @link        https://newsapi.aylien.com/
  */
 class Entity implements ArrayAccess
 {
@@ -52,13 +52,13 @@ class Entity implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $apiTypes = array(
+    protected static $apiTypes = [
         'text' => 'string',
         'score' => 'double',
         'types' => 'string[]',
         'links' => '\Aylien\NewsApi\Models\EntityLinks',
         'indices' => 'int[][]'
-    );
+    ];
 
     public static function apiTypes()
     {
@@ -69,62 +69,68 @@ class Entity implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
+    protected static $attributeMap = [
         'text' => 'text',
         'score' => 'score',
         'types' => 'types',
         'links' => 'links',
         'indices' => 'indices'
-    );
+    ];
+
+
+    /**
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = [
+        'text' => 'setText',
+        'score' => 'setScore',
+        'types' => 'setTypes',
+        'links' => 'setLinks',
+        'indices' => 'setIndices'
+    ];
+
+
+    /**
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = [
+        'text' => 'getText',
+        'score' => 'getScore',
+        'types' => 'getTypes',
+        'links' => 'getLinks',
+        'indices' => 'getIndices'
+    ];
 
     public static function attributeMap()
     {
         return self::$attributeMap;
     }
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     * @var string[]
-     */
-    protected static $setters = array(
-        'text' => 'setText',
-        'score' => 'setScore',
-        'types' => 'setTypes',
-        'links' => 'setLinks',
-        'indices' => 'setIndices'
-    );
-
     public static function setters()
     {
         return self::$setters;
     }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     * @var string[]
-     */
-    protected static $getters = array(
-        'text' => 'getText',
-        'score' => 'getScore',
-        'types' => 'getTypes',
-        'links' => 'getLinks',
-        'indices' => 'getIndices'
-    );
 
     public static function getters()
     {
         return self::$getters;
     }
 
+    
+
+    
+
     /**
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
@@ -142,7 +148,7 @@ class Entity implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
+        $invalid_properties = [];
         if (!is_null($this->container['score']) && ($this->container['score'] > 1.0)) {
             $invalid_properties[] = "invalid value for 'score', must be smaller than or equal to 1.0.";
         }
@@ -210,12 +216,13 @@ class Entity implements ArrayAccess
     public function setScore($score)
     {
 
-        if ($score > 1.0) {
+        if (!is_null($score) && ($score > 1.0)) {
             throw new \InvalidArgumentException('invalid value for $score when calling Entity., must be smaller than or equal to 1.0.');
         }
-        if ($score < 0.0) {
+        if (!is_null($score) && ($score < 0.0)) {
             throw new \InvalidArgumentException('invalid value for $score when calling Entity., must be bigger than or equal to 0.0.');
         }
+
         $this->container['score'] = $score;
 
         return $this;
