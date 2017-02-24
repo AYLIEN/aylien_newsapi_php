@@ -5,7 +5,7 @@
  *
  * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
  *
- *  Copyright 2016 Aylien, Inc.
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

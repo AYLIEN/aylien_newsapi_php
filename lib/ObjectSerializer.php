@@ -1,6 +1,6 @@
 <?php
 /**
- * ObjectSerializer 
+ * ObjectSerializer
  *
  * PHP version 5
  *
@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +30,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 
 namespace Aylien\NewsApi;
 
@@ -214,7 +220,7 @@ class ObjectSerializer
      *
      * @return object|array|null an single or an array of $class instances
      */
-    public static function deserialize($data, $class, $httpHeaders = null, $discriminator = null)
+    public static function deserialize($data, $class, $httpHeaders = null)
     {
         if (null === $data) {
             return null;
@@ -225,7 +231,7 @@ class ObjectSerializer
                 $subClass_array = explode(',', $inner, 2);
                 $subClass = $subClass_array[1];
                 foreach ($data as $key => $value) {
-                    $deserialized[$key] = self::deserialize($value, $subClass, null, $discriminator);
+                    $deserialized[$key] = self::deserialize($value, $subClass, null);
                 }
             }
             return $deserialized;
@@ -233,7 +239,7 @@ class ObjectSerializer
             $subClass = substr($class, 0, -2);
             $values = [];
             foreach ($data as $key => $value) {
-                $values[] = self::deserialize($value, $subClass, null, $discriminator);
+                $values[] = self::deserialize($value, $subClass, null);
             }
             return $values;
         } elseif ($class === 'object') {
@@ -271,6 +277,7 @@ class ObjectSerializer
             return $deserialized;
         } else {
             // If a discriminator is defined and points to a valid subclass, use it.
+            $discriminator = $class::DISCRIMINATOR;
             if (!empty($discriminator) && isset($data->{$discriminator}) && is_string($data->{$discriminator})) {
                 $subclass = '\Aylien\NewsApi\Model\\' . $data->{$discriminator};
                 if (is_subclass_of($subclass, $class)) {
@@ -287,7 +294,7 @@ class ObjectSerializer
 
                 $propertyValue = $data->{$instance::attributeMap()[$property]};
                 if (isset($propertyValue)) {
-                    $instance->$propertySetter(self::deserialize($propertyValue, $type, null, $discriminator));
+                    $instance->$propertySetter(self::deserialize($propertyValue, $type, null));
                 }
             }
             return $instance;

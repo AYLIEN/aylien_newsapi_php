@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +31,7 @@
  *  limitations under the License.
  */
 
+
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
@@ -33,8 +39,7 @@ use \ArrayAccess;
 /**
  * Entities Class Doc Comment
  *
- * @category    Class */
-/** 
+ * @category    Class
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -42,6 +47,8 @@ use \ArrayAccess;
  */
 class Entities implements ArrayAccess
 {
+    const DISCRIMINATOR = null;
+
     /**
       * The original name of the model.
       * @var string
@@ -134,6 +141,7 @@ class Entities implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+
         return $invalid_properties;
     }
 
@@ -141,10 +149,11 @@ class Entities implements ArrayAccess
      * validate all the properties in the model
      * return true if all passed
      *
-     * @return bool True if all properteis are valid
+     * @return bool True if all properties are valid
      */
     public function valid()
     {
+
         return true;
     }
 
@@ -248,3 +257,5 @@ class Entities implements ArrayAccess
         return json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
+
+

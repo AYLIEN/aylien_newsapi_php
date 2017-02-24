@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +31,7 @@
  *  limitations under the License.
  */
 
+
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
@@ -33,8 +39,7 @@ use \ArrayAccess;
 /**
  * StoryLinks Class Doc Comment
  *
- * @category    Class */
-/** 
+ * @category    Class
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -42,6 +47,8 @@ use \ArrayAccess;
  */
 class StoryLinks implements ArrayAccess
 {
+    const DISCRIMINATOR = null;
+
     /**
       * The original name of the model.
       * @var string
@@ -55,7 +62,8 @@ class StoryLinks implements ArrayAccess
     protected static $apiTypes = [
         'permalink' => 'string',
         'related_stories' => 'string',
-        'coverages' => 'string'
+        'coverages' => 'string',
+        'canonical' => 'string'
     ];
 
     public static function apiTypes()
@@ -70,7 +78,8 @@ class StoryLinks implements ArrayAccess
     protected static $attributeMap = [
         'permalink' => 'permalink',
         'related_stories' => 'related_stories',
-        'coverages' => 'coverages'
+        'coverages' => 'coverages',
+        'canonical' => 'canonical'
     ];
 
 
@@ -81,7 +90,8 @@ class StoryLinks implements ArrayAccess
     protected static $setters = [
         'permalink' => 'setPermalink',
         'related_stories' => 'setRelatedStories',
-        'coverages' => 'setCoverages'
+        'coverages' => 'setCoverages',
+        'canonical' => 'setCanonical'
     ];
 
 
@@ -92,7 +102,8 @@ class StoryLinks implements ArrayAccess
     protected static $getters = [
         'permalink' => 'getPermalink',
         'related_stories' => 'getRelatedStories',
-        'coverages' => 'getCoverages'
+        'coverages' => 'getCoverages',
+        'canonical' => 'getCanonical'
     ];
 
     public static function attributeMap()
@@ -129,6 +140,7 @@ class StoryLinks implements ArrayAccess
         $this->container['permalink'] = isset($data['permalink']) ? $data['permalink'] : null;
         $this->container['related_stories'] = isset($data['related_stories']) ? $data['related_stories'] : null;
         $this->container['coverages'] = isset($data['coverages']) ? $data['coverages'] : null;
+        $this->container['canonical'] = isset($data['canonical']) ? $data['canonical'] : null;
     }
 
     /**
@@ -139,6 +151,7 @@ class StoryLinks implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+
         return $invalid_properties;
     }
 
@@ -146,10 +159,11 @@ class StoryLinks implements ArrayAccess
      * validate all the properties in the model
      * return true if all passed
      *
-     * @return bool True if all properteis are valid
+     * @return bool True if all properties are valid
      */
     public function valid()
     {
+
         return true;
     }
 
@@ -216,6 +230,27 @@ class StoryLinks implements ArrayAccess
 
         return $this;
     }
+
+    /**
+     * Gets canonical
+     * @return string
+     */
+    public function getCanonical()
+    {
+        return $this->container['canonical'];
+    }
+
+    /**
+     * Sets canonical
+     * @param string $canonical The story canonical URL
+     * @return $this
+     */
+    public function setCanonical($canonical)
+    {
+        $this->container['canonical'] = $canonical;
+
+        return $this;
+    }
     /**
      * Returns true if offset exists. False otherwise.
      * @param  integer $offset Offset
@@ -274,3 +309,5 @@ class StoryLinks implements ArrayAccess
         return json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
+
+

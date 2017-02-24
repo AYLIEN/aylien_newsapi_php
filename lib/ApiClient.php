@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +30,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 
 namespace Aylien\NewsApi;
 
@@ -151,7 +157,7 @@ class ApiClient
 
         // form data
         if ($postData and in_array('Content-Type: application/x-www-form-urlencoded', $headers, true)) {
-            $postData = http_build_query($postData);
+            $postData = preg_replace("/%5B[0-9]+%5D=/i", "=", http_build_query($postData));
         } elseif ((is_object($postData) or is_array($postData)) and !in_array('Content-Type: multipart/form-data', $headers, true)) { // json model
             $postData = json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($postData));
         }
@@ -163,6 +169,11 @@ class ApiClient
         if ($this->config->getCurlTimeout() !== 0) {
             curl_setopt($curl, CURLOPT_TIMEOUT, $this->config->getCurlTimeout());
         }
+        // set connect timeout, if needed
+        if ($this->config->getCurlConnectTimeout() != 0) {
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $this->config->getCurlConnectTimeout());
+        }
+        
         // return the result on success, rather than just true
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -172,6 +183,22 @@ class ApiClient
         if ($this->config->getSSLVerification() === false) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        }
+
+        if ($this->config->getCurlProxyHost()) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->config->getCurlProxyHost());
+        }
+
+        if ($this->config->getCurlProxyPort()) {
+            curl_setopt($curl, CURLOPT_PROXYPORT, $this->config->getCurlProxyPort());
+        }
+
+        if ($this->config->getCurlProxyType()) {
+            curl_setopt($curl, CURLOPT_PROXYTYPE, $this->config->getCurlProxyType());
+        }
+
+        if ($this->config->getCurlProxyUser()) {
+            curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->config->getCurlProxyUser() . ':' .$this->config->getCurlProxyPassword());
         }
 
         if (!empty($queryParams)) {

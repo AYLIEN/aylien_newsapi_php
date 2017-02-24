@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +31,7 @@
  *  limitations under the License.
  */
 
+
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
@@ -33,8 +39,7 @@ use \ArrayAccess;
 /**
  * Sentiment Class Doc Comment
  *
- * @category    Class */
-/** 
+ * @category    Class
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -42,6 +47,8 @@ use \ArrayAccess;
  */
 class Sentiment implements ArrayAccess
 {
+    const DISCRIMINATOR = null;
+
     /**
       * The original name of the model.
       * @var string
@@ -150,17 +157,18 @@ class Sentiment implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+
         $allowed_values = ["positive", "neutral", "negative"];
         if (!in_array($this->container['polarity'], $allowed_values)) {
-            $invalid_properties[] = "invalid value for 'polarity', must be one of #{allowed_values}.";
+            $invalid_properties[] = "invalid value for 'polarity', must be one of 'positive', 'neutral', 'negative'.";
         }
 
-        if (!is_null($this->container['score']) && ($this->container['score'] > 1.0)) {
-            $invalid_properties[] = "invalid value for 'score', must be smaller than or equal to 1.0.";
+        if (!is_null($this->container['score']) && ($this->container['score'] > 1)) {
+            $invalid_properties[] = "invalid value for 'score', must be smaller than or equal to 1.";
         }
 
-        if (!is_null($this->container['score']) && ($this->container['score'] < 0.0)) {
-            $invalid_properties[] = "invalid value for 'score', must be bigger than or equal to 0.0.";
+        if (!is_null($this->container['score']) && ($this->container['score'] < 0)) {
+            $invalid_properties[] = "invalid value for 'score', must be bigger than or equal to 0.";
         }
 
         return $invalid_properties;
@@ -170,18 +178,19 @@ class Sentiment implements ArrayAccess
      * validate all the properties in the model
      * return true if all passed
      *
-     * @return bool True if all properteis are valid
+     * @return bool True if all properties are valid
      */
     public function valid()
     {
+
         $allowed_values = ["positive", "neutral", "negative"];
         if (!in_array($this->container['polarity'], $allowed_values)) {
             return false;
         }
-        if ($this->container['score'] > 1.0) {
+        if ($this->container['score'] > 1) {
             return false;
         }
-        if ($this->container['score'] < 0.0) {
+        if ($this->container['score'] < 0) {
             return false;
         }
         return true;
@@ -230,11 +239,11 @@ class Sentiment implements ArrayAccess
     public function setScore($score)
     {
 
-        if (!is_null($score) && ($score > 1.0)) {
-            throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be smaller than or equal to 1.0.');
+        if (!is_null($score) && ($score > 1)) {
+            throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be smaller than or equal to 1.');
         }
-        if (!is_null($score) && ($score < 0.0)) {
-            throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be bigger than or equal to 0.0.');
+        if (!is_null($score) && ($score < 0)) {
+            throw new \InvalidArgumentException('invalid value for $score when calling Sentiment., must be bigger than or equal to 0.');
         }
 
         $this->container['score'] = $score;
@@ -299,3 +308,5 @@ class Sentiment implements ArrayAccess
         return json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
+
+

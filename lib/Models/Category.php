@@ -10,8 +10,13 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
  * @link     https://newsapi.aylien.com/
  */
+
 /**
- *  Copyright 2016 Aylien, Inc.
+ * AYLIEN News API
+ *
+ * AYLIEN News API is the most powerful way of sourcing, searching and syndicating analyzed and enriched news content.
+ *
+ *  Copyright 2017 Aylien, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +31,7 @@
  *  limitations under the License.
  */
 
+
 namespace Aylien\NewsApi\Models;
 
 use \ArrayAccess;
@@ -33,8 +39,7 @@ use \ArrayAccess;
 /**
  * Category Class Doc Comment
  *
- * @category    Class */
-/** 
+ * @category    Class
  * @package     Aylien\NewsApi
  * @author      Hamed Ramezanian Nik
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
@@ -42,6 +47,8 @@ use \ArrayAccess;
  */
 class Category implements ArrayAccess
 {
+    const DISCRIMINATOR = null;
+
     /**
       * The original name of the model.
       * @var string
@@ -168,9 +175,10 @@ class Category implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+
         $allowed_values = ["iab-qag", "iptc-subjectcode"];
         if (!in_array($this->container['taxonomy'], $allowed_values)) {
-            $invalid_properties[] = "invalid value for 'taxonomy', must be one of #{allowed_values}.";
+            $invalid_properties[] = "invalid value for 'taxonomy', must be one of 'iab-qag', 'iptc-subjectcode'.";
         }
 
         return $invalid_properties;
@@ -180,10 +188,11 @@ class Category implements ArrayAccess
      * validate all the properties in the model
      * return true if all passed
      *
-     * @return bool True if all properteis are valid
+     * @return bool True if all properties are valid
      */
     public function valid()
     {
+
         $allowed_values = ["iab-qag", "iptc-subjectcode"];
         if (!in_array($this->container['taxonomy'], $allowed_values)) {
             return false;
@@ -379,3 +388,5 @@ class Category implements ArrayAccess
         return json_encode(\Aylien\NewsApi\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
+
+
