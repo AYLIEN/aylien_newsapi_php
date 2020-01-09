@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **facebook** | [**\Aylien\NewsApi\Models\ShareCount[]**](ShareCount.md) | Facebook shares count | [optional] 
-**googlePlus** | [**\Aylien\NewsApi\Models\ShareCount[]**](ShareCount.md) | Google Plus shares count | [optional] 
+**google_plus** | [**\Aylien\NewsApi\Models\ShareCount[]**](ShareCount.md) | Google Plus shares count | [optional] 
 **linkedin** | [**\Aylien\NewsApi\Models\ShareCount[]**](ShareCount.md) | LinkedIn shares count | [optional] 
 **reddit** | [**\Aylien\NewsApi\Models\ShareCount[]**](ShareCount.md) | Reddit shares count | [optional] 
 

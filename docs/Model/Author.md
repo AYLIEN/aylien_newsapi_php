@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**avatarUrl** | **string** | A URL which points to the author avatar | [optional] 
+**avatar_url** | **string** | A URL which points to the author avatar | [optional] 
 **id** | **int** | A unique identification for the author | [optional] 
 **name** | **string** | The extracted author full name | [optional] 
 
